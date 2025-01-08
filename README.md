@@ -1,9 +1,9 @@
-# Your Project's Title...
-Your project's description...
+# CME Group
+All project code for cmegroup.com on AEM Edge Delivery Services
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.aem.page/
-- Live: https://main--{repo}--{owner}.aem.live/
+- Preview: https://main--cmegroup--aemsites.aem.page/
+- Live: https://main--cmegroup--aemsites.aem.live/
 
 ## Documentation
 
