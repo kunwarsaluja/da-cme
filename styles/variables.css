@@ -1,0 +1,201 @@
+:root {
+    /* fonts */
+    /*Averta*/
+    --averta: 'Averta';
+    --avertaBold: 'Averta-Bold';
+    --avertaBlackItalic: 'Averta-BlackItalic';
+    --avertaExtrabold: 'Averta-Extrabold';
+    --avertaBoldItalic: 'Averta-BoldItalic';
+    --avertaBlack: 'Averta-Black';
+    --avertaExtraboldItalic: 'Averta-ExtraboldItalic';
+    --avertaExtrathin: 'Averta-Extrathin';
+    --avertaExtrathinItalic: 'Averta-ExtrathinItalic';
+    --avertaLight: 'Averta-Light';
+    --avertaLightItalic: 'Averta-LightItalic';
+    --avertaRegular: 'Averta-Regular';
+    --avertaRegularItalic: 'Averta-RegularItalic';
+    --avertaSemibold: 'Averta-Semibold';
+    --avertaSemiboldItalic: 'Averta-SemiboldItalic';
+    --avertaThin: 'Averta-Thin';
+    --avertaThinItalic: 'Averta-ThinItalic';
+
+    /* Roboto Mono */
+    --robotoMono: 'Roboto-Mono';
+    --robotoMonoThin: 'Roboto-Mono-Thin';
+    --robotoMonoLight: 'Roboto-Mono-Light';
+    --robotoMonoThinItalic: 'Roboto-Mono-ThinItalic';
+    --robotoMonoLightItalic: 'Roboto-Mono-LightItalic';
+    --robotoMonoRegular: 'Roboto-Mono-Regular';
+    --robotoMonoItalic: 'Roboto-Mono-Italic';
+    --robotoMonoMedium: 'Roboto-Mono-Medium';
+    --robotoMonoMediumItalic: 'Roboto-Mono-MediumItalic';
+    --robotoMonoBold: 'Roboto-Mono-Bold';
+    --robotoMonoBoldItalic: 'Roboto-Mono-BoldItalic';
+
+    /* CMEGroup Icons */
+    --cmeGroupIcons: 'CMEGroup-Icons';
+
+    /* FreightTextPro */
+    --freightTextPro: 'FreightTextPro';
+    --freightTextProMediumRegular: 'FreightTextProMedium-Regular';
+    --freightTextProBoldRegular: 'FreightTextProBold-Regular';
+    --freightTextProSemiboldRegular: 'FreightTextProSemibold-Regular';
+    --freightTextProBookRegular: 'FreightTextProBook-Regular';
+
+    /* RigidSquare */
+    --rigidSquare: 'RigidSquare';
+    --rigidSquareRegular: 'RigidSquare-Regular';
+    --rigidSquareItalic: 'RigidSquare-Italic';
+    --rigidSquareExtraLight: 'RigidSquare-ExtraLight';
+    --rigidSquareExtraLightItalic: 'RigidSquare-ExtraLightItalic';
+    --rigidSquareLight: 'RigidSquare-Light';
+    --rigidSquareLightItalic: 'RigidSquare-LightItalic';
+    --rigidSquareThin: 'RigidSquare-Thin';
+    --rigidSquareThinItalic: 'RigidSquare-ThinItalic';
+    --rigidSquareSemiBold: 'RigidSquare-SemiBold';
+    --rigidSquareSemiBoldItalic: 'RigidSquare-SemiBoldItalic';
+    --rigidSquareBold: 'RigidSquare-Bold';
+    --rigidSquareBoldItalic: 'RigidSquare-BoldItalic';
+    --rigidSquareExtraBold: 'RigidSquare-ExtraBold';
+    --rigidSquareExtraBoldItalic: 'RigidSquare-ExtraBoldItalic';
+
+    /* Tiempos Headline */
+    --tiemposHeadlineWeb: 'tiempos-headline-web';
+    --tiemposHeadlineWebMedium: 'tiempos-headline-web-medium';
+    --tiemposHeadlineWebRegular: 'tiempos-headline-web-regular';
+    --tiemposHeadlineWebSemibold: 'tiempos-headline-web-semibold';
+
+    /*CME Icons font*/
+    --icon-user: "\e900";
+    --icon-search: "\e901";
+    --icon-bell: "\e902";
+    --icon-chevron-up: "\e903";
+    --icon-chevron-down: "\e904";
+    --icon-chevron-left: "\e905";
+    --icon-chevron-right: "\e906";
+    --icon-briefcase: "\e907";
+    --icon-share: "\e908";
+    --icon-print: "\e909";
+    --icon-plus: "\e90a";
+    --icon-plus-bold: "\e90b";
+    --icon-minus: "\e90c";
+    --icon-minus-bold: "\e90d";
+    --icon-more-vertical: "\e90e";
+    --icon-menu-close: "\e90f";
+    --icon-menu: "\e910";
+    --icon-arrow-down: "\e911";
+    --icon-arrow-right: "\e912";
+    --icon-arrow-right-bold: "\e913";
+    --icon-arrow-right-thin: "\e914";
+    --icon-arrow-up: "\e915";
+    --icon-positive: "\e916";
+    --icon-thumbnails-list: "\e917";
+    --icon-dropdown: "\e918";
+    --icon-chat: "\e919";
+    --icon-envelope: "\e91a";
+    --icon-check: "\e91b";
+    --icon-list: "\e91c";
+    --icon-lock: "\e91d";
+    --icon-mic: "\e91e";
+    --icon-money: "\e91f";
+    --icon-percentage: "\e920";
+    --icon-play: "\e921";
+    --icon-settings: "\e922";
+    --icon-windows: "\e923";
+    --icon-expand: "\e924";
+    --icon-show-all: "\e925";
+    --icon-facebook: "\e926";
+    --icon-instagram: "\e927";
+    --icon-linkedin: "\e928";
+    --icon-twitter: "\e929";
+    --icon-youtube: "\e92a";
+    --icon-rss: "\e92b";
+    --icon-facebook-filled: "\e92c";
+    --icon-instagram-filled: "\e92d";
+    --icon-linkedin-filled: "\e92e";
+    --icon-twitter-filled: "\e92f";
+    --icon-youtube-filled: "\e930";
+    --icon-rss-filled: "\e931";
+    --icon-circle-arrow: "\e932";
+    --icon-circle-play: "\e933";
+    --icon-info-filled: "\e934";
+    --icon-question: "\e935";
+    --icon-question-filled: "\e936";
+    --icon-logo: "\e937";
+    --icon-history: "\e938";
+    --icon-happy: "\e939";
+    --icon-neutral: "\e93a";
+    --icon-sad: "\e93b";
+    --icon-attention-triangle: "\e93c";
+    --icon-arrow-left-bold: "\e93d";
+    --icon-chart: "\e93e";
+    --icon-bookmark-filled: "\e93f";
+    --icon-bookmark-outlined: "\e940";
+    --icon-expand-secondary: "\e941";
+    --icon-timer: "\e942";
+    --icon-video-play: "\e943";
+    --icon-audio: "\e944";
+    --icon-chevron-up-down: "\e945";
+    --icon-download: "\e946";
+    --icon-podcast-pause: "\e947";
+    --icon-podcast-play: "\e948";
+    --icon-podcast-mute: "\e949";
+    --icon-podcast-speaker1: "\e94a";
+    --icon-podcast-speaker2: "\e94b";
+    --icon-pencil: "\e94c";
+    --icon-mobile: "\e94d";
+    --icon-disabled-cursor: "\e94e";
+    --icon-facebook-simple: "\e94f";
+    --icon-instagram-simple: "\e950";
+    --icon-linkedin-simple: "\e951";
+    --icon-twitter-simple: "\e952";
+    --icon-youtube-simple: "\e953";
+    --icon-rss-simple: "\e954";
+    --icon-document-code: "\e955";
+    --icon-document-csv: "\e956";
+    --icon-document-excel: "\e957";
+    --icon-document-image: "\e958";
+    --icon-document-xml: "\e959";
+    --icon-document-zip: "\e95a";
+    --icon-document-generic: "\e95b";
+    --icon-document-pdf: "\e95c";
+    --icon-in-person: "\e95d";
+    --icon-podcast: "\e95e";
+    --icon-video: "\e95f";
+    --icon-webinar: "\e960";
+    --icon-calendar: "\e961";
+    --icon-filter: "\e962";
+    --icon-trash-can-regular: "\e963";
+    --icon-star-solid: "\e964";
+    --icon-users-solid: "\e965";
+    --icon-grip-vertical-solid: "\e966";
+    --icon-copy-regular: "\e967";
+    --icon-bell-regular: "\e968";
+    --icon-star-stroke: "\e969";
+    --icon-star-fill: "\e96a";
+    --icon-list-solid: "\e96b";
+    --icon-expanded: "\e96c";
+    --icon-bell-slash-regular: "\e96d";
+    --icon-bell-solid: "\e96e";
+    --icon-download-line: "\e96f";
+    --icon-clock-regular: "\e970";
+    --icon-phone-solid: "\e971";
+    --icon-fedwatch-no-data: "\e972";
+    --icon-calendar-regular: "\e973";
+    --icon-fedwatch-data-in-progress: "\e974";
+    --icon-card-view: "\e975";
+    --icon-list-view: "\e976";
+    --icon-calculator: "\e977";
+    --icon-subscription-featured: "\e978";
+    --icon-subscription-new: "\e979";
+    --icon-subscription-popular: "\e97a";
+    --icon-checkbox-unchecked: "\e97b";
+    --icon-checkbox-checked: "\e97c";
+    --icon-triangle-up: "\e97d";
+    --icon-triangle-down: "\e97e";
+    --icon-simulator: "\e97f";
+
+    /* icons/imgs paths */
+    --icon-disabled-cursor-path: '../font-icons/078-disabled-cursor.svg';
+    /* fonts */
+}

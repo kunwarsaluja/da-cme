@@ -1,0 +1,263 @@
+:root {
+    /* colors */
+    --white: white;
+    --red: red;
+    --blue: blue;
+    --darkgreen: darkgreen;
+
+    /* Primary Palette */
+    --blue1: #081d37;
+    --blue-transparency: #020f1ed9;
+    --blue2: #112b4a;
+    --blue3: #1f3374;
+    --blue3A: #1f3655;
+    --blue4: #006eb6;
+    --blue4A: #002658;
+    --blue5: #3cc8ff;
+    --blue6: #ebf9ff;
+    --blue7: #0090ff;
+    --blue-active: #354a66;
+    --blue-navbar: #0d2646;
+    --gray1: #16202a;
+    --gray2: #25323c;
+    --gray3: #5a6874;
+    --gray4: #c2cace;
+    --gray5: #ebedee;
+    --gray5A: #eeeeee;
+    --gray6: #f1f5f7;
+    --gray7: #3a464f;
+    --gray8: #3c4043;
+    --gray9: #b2b2b2;
+    --gray10: #d5dbdF;
+    --citron: #e3e935;
+    --green: #00e473;
+    --pink: #ffe2e4;
+    --yellow: #feffe8;
+    --white: #ffffff;
+    --black: #000000;
+    --forest: #187e02;
+    --activeRed: #df0035;
+    --navy1: #1f3655;
+    --navy2: #354a66;
+    --blue-active-state: #005c99;
+
+    /* blues */
+
+    /*--blue-colors: (
+    blue1: --blue1,
+    blue2: --blue2,
+    blue3: --blue3,
+    blue3A: --blue3A,
+    blue4: --blue4,
+    blue4A: --blue4A,
+    blue5: --blue5,
+    blue6: --blue6,
+    blue7: --blue7,
+    );*/
+
+    /* grays */
+
+    /*--gray-colors: (
+    gray1: --gray1,
+    gray2: --gray2,
+    gray3: --gray3,
+    gray4: --gray4,
+    gray5: --gray5,
+    gray5A: --gray5A,
+    gray6: --gray6,
+    gray7: --gray7,
+    gray8: --gray8,
+    );*/
+
+    /* other */
+
+    /*--other-colors: (
+    white: --white,
+    blue: --blue2,
+    );*/
+
+    /* all colors */
+
+    /*--all-colors: (
+    blues: --blue-colors,
+    grays: --gray-colors,
+    others: --other-colors,
+    );*/
+
+    /* Temperature Colors */
+    --temp_0_00: #5a6874;
+    --temp_0_25: #557a66;
+    --temp_0_50: #508c57;
+    --temp_0_75: #4b9d49;
+    --temp_1_00: #46af3a;
+    --temp_1_25: #41c12c;
+    --temp_1_50: #3cd31d;
+    --temp_1_75: #37e40f;
+    --temp_2_00: #32f600;
+
+    /*--positiveColors: --temp_0_00 --temp_0_25 --temp_0_50 --temp_0_75 --temp_1_00 --temp_1_25 --temp_1_50 --temp_1_75 --temp_2_00;*/
+
+    --temp_-0_25: #6f5b6d;
+    --temp_-0_50: #834e66;
+    --temp_-0_75: #98415f;
+    --temp_-1_00: #ad3459;
+    --temp_-1_25: #c12752;
+    --temp_-1_50: #d61a4b;
+    --temp_-1_75: #ea0d44;
+    --temp_-2_00: #ff003d;
+
+    /*--negativeColors: --temp_-0_25 --temp_-0_50 --temp_-0_75 --temp_-1_00 --temp_-1_25 --temp_-1_50 --temp_-1_75 --temp_-2_00;*/
+
+    /* Colors Midpoint */
+    --mid_0_00: --black;
+    --mid_0_01: #0a2f00;
+    --mid_0_50: #135c00;
+    --mid_1_00: #197b00;
+    --mid_1_50: #1f9a00;
+    --mid_2_00: #26b900;
+
+    /*--positiveColorsMidpoint: --mid_0_00 --mid_0_01 --mid_0_50 --mid_1_00 --mid_1_50 --mid_2_00;*/
+
+    --mid_-0_01: #40000f;
+    --mid_-0_50: #600017;
+    --mid_-1_00: #80001f;
+    --mid_-1_50: #9f0026;
+    --mid_-2_00: #bf002e;
+
+    /*--negativeColorsMidpoint: --mid_-0_01 --mid_-0_50 --mid_-1_00 --mid_-1_50 --mid_-2_00;*/
+
+    /*--gradient-default: --temp_-2_00, --temp_-1_75, --temp_-1_50, --temp_-1_25, --temp_-1_00, --temp_-0_75, --temp_-0_50, --temp_-0_25, --temp_0_00, --temp_0_25, --temp_0_50, --temp_0_75, --temp_1_00, --temp_1_25, --temp_1_50, --temp_1_75, --temp_2_00;*/
+    /*--gradient-regional: --temp_2_00, --temp_1_75, --temp_1_50, --temp_1_25, --temp_1_00, --temp_0_75, --temp_0_50, --temp_0_25, --temp_0_00, --temp_-0_25, --temp_-0_50, --temp_-0_75, --temp_-1_00, --temp_-1_25, --temp_-1_50, --temp_-1_75, --temp_-2_00;*/
+
+    /* Form colors */
+    --form-field-error: #ff003d;
+    --form-field-selected: --blue4;
+    --form-field-success: #197b00;
+
+    /* Volume chart */
+    --volumeChartBackground: #1f3755;
+    --drop-shadow-gray: rgba(60, 64, 67, 0.15);
+
+    /* Markets Movers */
+    --marketMoveUp: #2dd701;
+    --marketMoveDown: #ff003d;
+
+    /* transparent */
+    --transparent: rgba(0, 0, 0, 0);
+
+    /* Market sentiments arrows icons*/
+    --strong-upward: #45ea1b;
+    --weak-upward: #88f87f;
+    --strong-downward: #ff003d;
+    --weak-downward: #ff759d;
+    --trading-range: #25323c;
+    /*--market-sentiments-colors: (
+    strongUpward: --strong-upward,
+    weakUpward: --weak-upward,
+    strongDownward: --strong-downward,
+    weakDownward: --weak-downward,
+    tradingRange: --trading-range
+    );*/
+
+    /* addThis button colors */
+    --add-this-button-gray: #d8d8d8;
+
+    /* Product Slate palette */
+    --prod-slate-gray: #333333;
+    --prod-slate-checklist: #efefef;
+    --prod-slate-placeholder-color: #c7c7c7;
+
+    /* card divider colors */
+    --card-divider-gray: #979797;
+
+    /* podcast player */
+    --podcast-player-overlay-text: #2878c2;
+
+    /* Bookmark tooltip icon */
+    --tooltip-green: #21b002;
+
+    /* petroleum data compoment styles */
+    --petroleum-black: #282828;
+    --petroleum-white: #f6f6f6;
+    --petroleum-gray: #939598;
+
+    /* Product Slate palette */
+    --prod-slate-gray: #333333;
+    --prod-slate-checklist: #efefef;
+    --prod-slate-placeholder-color: #c7c7c7;
+
+    /* PDP change colors */
+    --changeIncreaseDefault: #187e02;
+    --changeDecreaseDefault: #ff003d;
+
+    --changeIncreaseReverse: #2ae303;
+    --changeDecreaseReverse: #df0035;
+
+    /* Crypto Widget row highlight */
+    --crypto-row-highlight: #1f3655;
+
+    /* Block Trades Alerts colors */
+    --bt-collapsible-border: #979797;
+    --bt-success-message: #e5f1e3;
+    --bt-failure-message: #ffe2e4;
+
+    /* Notifications */
+    --notificationSuccessBackground: #e5f1e3;
+    --notificationSuccessTick: #1f9a00;
+    --notificationFailTick: #9f0026;
+    --notificationFailBackground: #ffe2e4;
+
+    /* Quikstrike Change */
+    --quikstrikePositive: #2dd700;
+    --quikstrikeNegative: #ff4974;
+
+    /* sofr rate data table styles */
+    --sofr-black: #282828;
+    --sofr-gray: #939598;
+    --sofr-trade-date: #424242;
+
+    /* estr rate data table styles */
+    --estr-black: #282828;
+    --estr-gray: #939598;
+    --estr-trade-date: #424242;
+
+    /* Trading Hours palette */
+    --open: #187e02;
+    --preopen: #3cc8ff;
+    --closed: #ff4974;
+    --pcp: --blue4;
+    --paused: #ff912e;
+    --tooltipQuestion: #22749e;
+
+    /* Education palette */
+    --completedTick: #1f9a00;
+    --completionCertificateTitle: #23a8ff;
+
+    /* VOI By Exchange & Asset Class */
+    --positiveVOI: #008000;
+    --negativeVOI: #ff0000;
+
+    /* Economic Calendar */
+    --economicHighImpact: #00E473;
+    --economicMediumImpact: #FF912E;
+    --economicLowImpact: #E3E935;
+
+    /* Commodity data colors */
+    --commodity-black: #282828;
+    --commodity-white: #f6f6f6;
+    --commodity-gray: #939598;
+
+    /* Highlighting Colors */
+    --highlightingDefault: #f6f8bd;
+    --highlightingReverse: #5a6864;
+
+    /* Info Sentience Color */
+    --infoSentience-green: #32f600;
+
+    /* Subscription Center */
+    --subscriptionFilterBorder: #e3e3e3;
+
+    /* Blocktrades Widget */
+    --blocktrades-gray: #6c757d;
+    /* colors */
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="16px"
+   height="16px"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="94-video.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     id="namedview10"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="32.5"
+     inkscape:cx="7.9846154"
+     inkscape:cy="7.9846154"
+     inkscape:window-width="1600"
+     inkscape:window-height="837"
+     inkscape:window-x="-8"
+     inkscape:window-y="-2"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg8" />
+  <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+  <title
+     id="title2">Icons / Video</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <g
+     id="Icons-/-Video"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd">
+    <path
+       style="color:#000000;fill:#000000;-inkscape-stroke:none"
+       d="m 9.9981241,2.999931 c 1.2270349,0 2.2217929,0.9384828 2.2217929,2.096 v 0 1 l 2.873931,-1.4366896 c 0.399311,-0.2 0.869242,0.090759 0.869242,0.5372414 v 0 6.0870342 c 0,0.446483 -0.469931,0.736276 -0.869242,0.537242 v 0 l -2.873931,-1.43669 v 0.999724 c 0,1.157517 -0.994758,2.095862 -2.2217929,2.095862 v 0 H 2.2218483 c -1.22717244,0 -2.221793127587,-0.938345 -2.221793127587,-2.095862 v 0 -6.287862 c 0,-1.1575172 0.994620687587,-2.096 2.221793127587,-2.096 v 0 z M 4.9428138,6.2044828 C 4.7157793,6.0908276 4.4487448,6.256069 4.4487448,6.5098621 v 0 V 9.97 c 0,0.253793 0.2670345,0.418621 0.494069,0.305379 v 0 L 8.4037793,8.5453103 c 0.2515862,-0.1255172 0.2515862,-0.4848275 0,-0.6107586 v 0 z"
+       id="Path-2" />
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="12px" height="10px" viewBox="0 0 12 10" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <g id="chart_icon">
+    <path d="M0 0L2.4 0L2.4 5L0 5L0 0Z" transform="translate(0 5)"/>
+    <path d="M0 0L2.4 0L2.4 7.5L0 7.5L0 0Z" transform="translate(4.800781 2.5)"/>
+    <path d="M0 0L2.4 0L2.4 10L0 10L0 0Z" transform="translate(9.599609 0)"/>
+  </g>
+</svg>
