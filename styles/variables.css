@@ -1,5 +1,6 @@
 :root {
     /* fonts */
+
     /* Averta */
     --averta: 'Averta';
     --averta-bold: 'Averta-Bold';
@@ -197,5 +198,6 @@
 
     /* icons/imgs paths */
     --icon-disabled-cursor-path: '../font-icons/078-disabled-cursor.svg';
+    
     /* fonts */
 }
