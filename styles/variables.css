@@ -2,68 +2,68 @@
     /* fonts */
     /*Averta*/
     --averta: 'Averta';
-    --avertaBold: 'Averta-Bold';
-    --avertaBlackItalic: 'Averta-BlackItalic';
-    --avertaExtrabold: 'Averta-Extrabold';
-    --avertaBoldItalic: 'Averta-BoldItalic';
-    --avertaBlack: 'Averta-Black';
-    --avertaExtraboldItalic: 'Averta-ExtraboldItalic';
-    --avertaExtrathin: 'Averta-Extrathin';
-    --avertaExtrathinItalic: 'Averta-ExtrathinItalic';
-    --avertaLight: 'Averta-Light';
-    --avertaLightItalic: 'Averta-LightItalic';
-    --avertaRegular: 'Averta-Regular';
-    --avertaRegularItalic: 'Averta-RegularItalic';
-    --avertaSemibold: 'Averta-Semibold';
-    --avertaSemiboldItalic: 'Averta-SemiboldItalic';
-    --avertaThin: 'Averta-Thin';
-    --avertaThinItalic: 'Averta-ThinItalic';
+    --averta-bold: 'Averta-Bold';
+    --averta-black-italic: 'Averta-BlackItalic';
+    --averta-extrabold: 'Averta-Extrabold';
+    --averta-bold-italic: 'Averta-BoldItalic';
+    --averta-black: 'Averta-Black';
+    --averta-extrabold-italic: 'Averta-ExtraboldItalic';
+    --averta-extrathin: 'Averta-Extrathin';
+    --averta-extrathin-italic: 'Averta-ExtrathinItalic';
+    --averta-light: 'Averta-Light';
+    --averta-light-italic: 'Averta-LightItalic';
+    --averta-regular: 'Averta-Regular';
+    --averta-regular-italic: 'Averta-RegularItalic';
+    --averta-semibold: 'Averta-Semibold';
+    --averta-semibold-italic: 'Averta-SemiboldItalic';
+    --averta-thin: 'Averta-Thin';
+    --averta-thin-italic: 'Averta-ThinItalic';
 
     /* Roboto Mono */
-    --robotoMono: 'Roboto-Mono';
-    --robotoMonoThin: 'Roboto-Mono-Thin';
-    --robotoMonoLight: 'Roboto-Mono-Light';
-    --robotoMonoThinItalic: 'Roboto-Mono-ThinItalic';
-    --robotoMonoLightItalic: 'Roboto-Mono-LightItalic';
-    --robotoMonoRegular: 'Roboto-Mono-Regular';
-    --robotoMonoItalic: 'Roboto-Mono-Italic';
-    --robotoMonoMedium: 'Roboto-Mono-Medium';
-    --robotoMonoMediumItalic: 'Roboto-Mono-MediumItalic';
-    --robotoMonoBold: 'Roboto-Mono-Bold';
-    --robotoMonoBoldItalic: 'Roboto-Mono-BoldItalic';
+    --roboto-mono: 'Roboto-Mono';
+    --roboto-mono-thin: 'Roboto-Mono-Thin';
+    --roboto-mono-light: 'Roboto-Mono-Light';
+    --roboto-mono-thin-italic: 'Roboto-Mono-ThinItalic';
+    --roboto-mono-light-italic: 'Roboto-Mono-LightItalic';
+    --roboto-mono-regular: 'Roboto-Mono-Regular';
+    --roboto-mono-italic: 'Roboto-Mono-Italic';
+    --roboto-mono-medium: 'Roboto-Mono-Medium';
+    --roboto-mono-medium-italic: 'Roboto-Mono-MediumItalic';
+    --roboto-mono-bold: 'Roboto-Mono-Bold';
+    --roboto-mono-bold-italic: 'Roboto-Mono-BoldItalic';
 
     /* CMEGroup Icons */
-    --cmeGroupIcons: 'CMEGroup-Icons';
+    --cme-group-icons: 'CMEGroup-Icons';
 
     /* FreightTextPro */
-    --freightTextPro: 'FreightTextPro';
-    --freightTextProMediumRegular: 'FreightTextProMedium-Regular';
-    --freightTextProBoldRegular: 'FreightTextProBold-Regular';
-    --freightTextProSemiboldRegular: 'FreightTextProSemibold-Regular';
-    --freightTextProBookRegular: 'FreightTextProBook-Regular';
+    --freight-text-pro: 'FreightTextPro';
+    --freight-text-pro-medium-regular: 'FreightTextProMedium-Regular';
+    --freight-text-pro-bold-regular: 'FreightTextProBold-Regular';
+    --freight-text-pro-semibold-regular: 'FreightTextProSemibold-Regular';
+    --freight-text-pro-book-regular: 'FreightTextProBook-Regular';
 
     /* RigidSquare */
-    --rigidSquare: 'RigidSquare';
-    --rigidSquareRegular: 'RigidSquare-Regular';
-    --rigidSquareItalic: 'RigidSquare-Italic';
-    --rigidSquareExtraLight: 'RigidSquare-ExtraLight';
-    --rigidSquareExtraLightItalic: 'RigidSquare-ExtraLightItalic';
-    --rigidSquareLight: 'RigidSquare-Light';
-    --rigidSquareLightItalic: 'RigidSquare-LightItalic';
-    --rigidSquareThin: 'RigidSquare-Thin';
-    --rigidSquareThinItalic: 'RigidSquare-ThinItalic';
-    --rigidSquareSemiBold: 'RigidSquare-SemiBold';
-    --rigidSquareSemiBoldItalic: 'RigidSquare-SemiBoldItalic';
-    --rigidSquareBold: 'RigidSquare-Bold';
-    --rigidSquareBoldItalic: 'RigidSquare-BoldItalic';
-    --rigidSquareExtraBold: 'RigidSquare-ExtraBold';
-    --rigidSquareExtraBoldItalic: 'RigidSquare-ExtraBoldItalic';
+    --rigid-square: 'RigidSquare';
+    --rigid-square-regular: 'RigidSquare-Regular';
+    --rigid-square-italic: 'RigidSquare-Italic';
+    --rigid-square-extra-light: 'RigidSquare-ExtraLight';
+    --rigid-square-extra-light-italic: 'RigidSquare-ExtraLightItalic';
+    --rigid-square-light: 'RigidSquare-Light';
+    --rigid-square-light-italic: 'RigidSquare-LightItalic';
+    --rigid-square-thin: 'RigidSquare-Thin';
+    --rigid-square-thin-italic: 'RigidSquare-ThinItalic';
+    --rigid-square-semi-bold: 'RigidSquare-SemiBold';
+    --rigid-square-semi-bold-italic: 'RigidSquare-SemiBoldItalic';
+    --rigid-square-bold: 'RigidSquare-Bold';
+    --rigid-square-bold-italic: 'RigidSquare-BoldItalic';
+    --rigid-square-extra-bold: 'RigidSquare-ExtraBold';
+    --rigid-square-extra-bold-italic: 'RigidSquare-ExtraBoldItalic';
 
     /* Tiempos Headline */
-    --tiemposHeadlineWeb: 'tiempos-headline-web';
-    --tiemposHeadlineWebMedium: 'tiempos-headline-web-medium';
-    --tiemposHeadlineWebRegular: 'tiempos-headline-web-regular';
-    --tiemposHeadlineWebSemibold: 'tiempos-headline-web-semibold';
+    --tiempos-headline-web: 'tiempos-headline-web';
+    --tiempos-headline-web-medium: 'tiempos-headline-web-medium';
+    --tiempos-headline-web-regular: 'tiempos-headline-web-regular';
+    --tiempos-headline-web-semibold: 'tiempos-headline-web-semibold';
 
     /*CME Icons font*/
     --icon-user: "\e900";
