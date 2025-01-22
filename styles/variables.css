@@ -1,6 +1,6 @@
 :root {
     /* fonts */
-    /*Averta*/
+    /* Averta */
     --averta: 'Averta';
     --averta-bold: 'Averta-Bold';
     --averta-black-italic: 'Averta-BlackItalic';
@@ -65,7 +65,7 @@
     --tiempos-headline-web-regular: 'tiempos-headline-web-regular';
     --tiempos-headline-web-semibold: 'tiempos-headline-web-semibold';
 
-    /*CME Icons font*/
+    /* CME Icons font */
     --icon-user: "\e900";
     --icon-search: "\e901";
     --icon-bell: "\e902";

@@ -5,9 +5,9 @@
     --blue-transparency: #020f1ed9;
     --blue2: #112b4a;
     --blue3: #1f3374;
-    --blue3A: #1f3655;
+    --blue3-a: #1f3655;
     --blue4: #006eb6;
-    --blue4A: #002658;
+    --blue4-a: #002658;
     --blue5: #3cc8ff;
     --blue6: #ebf9ff;
     --blue7: #0090ff;
@@ -18,7 +18,7 @@
     --gray3: #5a6874;
     --gray4: #c2cace;
     --gray5: #ebedee;
-    --gray5A: #eeeeee;
+    --gray5-a: #eee;
     --gray6: #f1f5f7;
     --gray7: #3a464f;
     --gray8: #3c4043;
@@ -28,12 +28,12 @@
     --green: #00e473;
     --pink: #ffe2e4;
     --yellow: #feffe8;
-    --white: #ffffff;
-    --black: #000000;
+    --white: #fff;
+    --black: #000;
     --forest: #187e02;
     --darkgreen: darkgreen;
     --red: red;
-    --activeRed: #df0035;
+    --active-red: #df0035;
     --navy1: #1f3655;
     --navy2: #354a66;
     --blue-active-state: #005c99;
