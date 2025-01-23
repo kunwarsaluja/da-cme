@@ -323,7 +323,7 @@ main img {
 }
 
 /* buttons */
-a.button:any-link,
+a.button,
 button {
     border-radius: 4px;
     display: inline-block;
@@ -347,6 +347,7 @@ button:active,
 button:focus {
     box-shadow: none;
 }
+
 a.button.primary,
 button.primary {
     font-size: 12px;
