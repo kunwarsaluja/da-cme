@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="16px"
+   height="16px"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="88-document-xml.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs13" />
+  <sodipodi:namedview
+     id="namedview11"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="32.5"
+     inkscape:cx="7.9846154"
+     inkscape:cy="7.9846154"
+     inkscape:window-width="1600"
+     inkscape:window-height="837"
+     inkscape:window-x="-8"
+     inkscape:window-y="-2"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg9" />
+  <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+  <title
+     id="title2">Icons / Document XML</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <g
+     id="Icons-/-Document-XML"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd">
+    <path
+       style="color:#000000;fill:#000000;-inkscape-stroke:none"
+       d="M 2,0 V 16 H 14.78924 V 5.5619157 L 12.402114,2.6178604 10.275237,0 Z m 1.0828073,1.0828073 6.0905606,-6.149e-4 6.149e-4,5.3642312 4.5324492,-1.537e-4 V 14.917346 H 3.0828073 Z m 7.1733677,0.6107316 1.305241,1.6065332 1.672941,2.0633905 -2.977721,1.537e-4 z"
+       id="icon-document" />
+    <path
+       style="color:#000000;fill:#000000;-inkscape-stroke:none"
+       d="M 4.5855,12.195 5.157,11.2365 H 5.1705 L 5.733,12.195 H 6.741 L 5.742,10.584 6.696,9 H 5.7285 L 5.184,9.927 H 5.1705 L 4.635,9 H 3.645 L 4.599,10.5885 3.6,12.195 Z m 3.2715,0 V 10.6155 H 7.8705 L 8.406,11.619 H 8.9505 L 9.486,10.6245 h 0.0135 v 1.5705 h 0.846 V 9 H 9.477 L 8.685,10.5885 H 8.676 L 7.875,9 H 7.011 v 3.195 z m 5.094,0 V 11.4345 H 11.7045 V 9 h -0.882 v 3.195 z"
+       id="XML" />
+  </g>
+</svg>
