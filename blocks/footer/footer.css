@@ -1,20 +1,85 @@
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  background-color: #3A464F;
+  padding: 60px 32px 44px;
+  font-size: 12px;
 }
+
 
 footer .footer > div {
   margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+  max-width: 1454px;
+  
 }
 
 footer .footer p {
   margin: 0;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: .36px;
+  color: white;
 }
 
-@media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+footer .footer a {
+    color: #3cc8ff;
+    line-height: 16px;
+    font-weight: 400;
+    letter-spacing: 0.36px;
+    text-decoration: none;
+}
+
+footer .footer a:hover {
+    text-decoration: underline;
+}
+
+
+footer .footer a[href$=".pdf"]::after {
+    content: '>';
+    display: inline-block;
+    padding-left: 5px;
+    padding-bottom: 1px;
   }
+
+footer .footer .default-content-wrapper:first-child {
+    margin-bottom: 30px;
+}
+
+footer .footer .section:last-of-type .default-content-wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+footer .footer .section:last-of-type .default-content-wrapper p:first-child {
+    margin-bottom: 30px;
+}
+
+footer .footer .section:last-child .default-content-wrapper ul {
+    padding: inherit;
+    margin: inherit;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+}
+
+footer .footer .section:last-child .default-content-wrapper ul li:not(:last-child)::after {
+    content: '|';
+    color: white;
+    margin:auto 9px
+}
+
+@media (width > 768px) {
+footer .footer .section:last-of-type .default-content-wrapper {
+    flex-flow: row nowrap;
+}
+
+footer .footer .section:last-child .default-content-wrapper ul {
+    margin-left:128px;
+}
+}
+
+@media (width > 900px) {
+footer .footer > div {
+    margin: 0 160px;
+    padding-left: 88px;
+    padding-right: 88px;
+}
 }
