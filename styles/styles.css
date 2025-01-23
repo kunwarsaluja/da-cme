@@ -77,60 +77,20 @@ body {
     font-size: var(--body-font-size-s);
 }
 
-@media (width >= 769px) {
+@media (width >=769px) {
     body {
         font-size: var(--body-font-size-m);
     }
-
-    body.hide-right-rail .standard-article-main-section {
-        margin-left: 16.6667%;
-    }
-}
-
-body.hide-addthis .st-sticky-share-buttons,
-body.hide-addthis .marketing-popup,
-body.hide-right-rail .standard-article-right-rail,
-body.hide-right-rail.openmarkets-showcase-article-template .col-sm-3 {
-    display: none !important;
-}
-
-body.education-iframe {
-    background: var(--background-color);
-}
-
-body.education-iframe .education-header~.xf-content-height {
-    display: none;
-}
-
-body.education-iframe .education-header~.xf-content-height+.component.section {
-    display: none;
-}
-
-body.overflow-x-hidden {
-    overflow-x: hidden;
-}
-
-body.overflow-y-hidden {
-    overflow-y: hidden;
 }
 
 body.include-nav {
     margin-top: 100px; /* navbar height */
 }
 
-@media (width >= 993px) {
+@media (width >=993px) {
     body.include-nav {
         margin-top: 0;
     }
-}
-
-body.overlay-visible #at4-share,
-body.modal-open #at4-share {
-    opacity: 0;
-    pointer-events: none;
-
-    /* Fix for the overlap issue in IE 11 */
-    position: relative;
 }
 
 header {
@@ -211,7 +171,7 @@ h6 {
     font-weight: 700;
 }
 
-@media (width >= 769px) {
+@media (width >=769px) {
     h1 {
         font-size: var(--heading-font-size-xxl);
         line-height: 54px;
@@ -324,49 +284,25 @@ a:visited {
     color: var(--link-color);
 }
 
-/* buttons */
-a.button:any-link,
-button {
-    box-sizing: border-box;
-    display: inline-block;
-    max-width: 100%;
-    margin: 12px 0;
-    border: 2px solid transparent;
-    border-radius: 2.4em;
-    padding: 0.5em 1.2em;
-    font-family: var(--body-font-family);
-    font-style: normal;
-    font-weight: 500;
-    line-height: 1.25;
-    text-align: center;
-    text-decoration: none;
-    background-color: var(--link-color);
-    color: var(--background-color);
-    cursor: pointer;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+/* ul */
+ol,
+ul {
+    padding-inline-start: 40px;
+    margin-bottom: 30px;
 }
 
-a.button:hover,
-a.button:focus,
-button:hover,
-button:focus {
-    background-color: var(--link-hover-color);
-    cursor: pointer;
+ol li,
+ul li {
+    margin-bottom: 10px;
 }
 
-button:disabled,
-button:disabled:hover {
-    background-color: var(--light-color);
-    cursor: unset;
-}
-
-a.button.secondary,
-button.secondary {
-    background-color: unset;
-    border: 2px solid currentcolor;
-    color: var(--text-color);
+/* HR Default Styles */
+hr {
+    background-color: var(--gray5);
+    border: none;
+    color: var(--gray5);
+    height: 1px;
+    margin-bottom: 20px;
 }
 
 main img {
@@ -384,6 +320,95 @@ main img {
 .icon img {
     height: 100%;
     width: 100%;
+}
+
+/* buttons */
+.button {
+    border-radius: 4px;
+    display: inline-block;
+    font-family: var(--averta);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 1.5px;
+    padding: 10px 22px;
+    text-transform: uppercase;
+    vertical-align: middle;
+    box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 2px 6px 2px rgba(60 64 67 / 15%);
+    background-image: none !important;
+    border: none;
+}
+
+.button:active,
+.button:focus {
+    box-shadow: none;
+}
+
+.button.primary {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    line-height: 12px;
+    background-color: var(--blue4);
+    color: var(--white);
+    border: 2px solid var(--blue4);
+}
+
+.button.primary:active {
+    border-color: var(--blue-active-state) !important;
+    background-color: var(--blue-active-state) !important;
+    color: var(--white) !important;
+}
+
+.button.primary:disabled,
+.button.primary[disabled],
+.button.primary.disabled {
+    background-color: var(--gray5);
+    border-color: var(--gray5);
+    color: var(--gray3);
+}
+
+.button.primary.inactive:hover,
+.button.primary.inactive:active {
+    background-color: var(--blue4);
+    border-color: var(--blue4);
+    color: var(--white);
+}
+
+.button.primary:hover {
+    background-color: var(--blue5);
+    border-color: var(--blue5);
+    color: var(--blue2);
+}
+
+button.secondary {
+    background-color: transparent;
+    border: 2px solid;
+    box-shadow: none;
+    font-size: 12px;
+    padding: 10px 22px;
+    line-height: 12px;
+    letter-spacing: 1.5px;
+    border-color: var(--blue5);
+    color: var(--gray3);
+}
+
+button.secondary:hover {
+    background-color: var(--blue5) !important;
+    border-color: var(--blue5) !important;
+    color: var(--blue2) !important;
+}
+
+button.secondary:active {
+    color: var(--white) !important;
+    border-color: var(--blue-active-state) !important;
+    background-color: var(--blue-active-state) !important;
+}
+
+button.secondary:disabled,
+button.secondary[disabled],
+button.secondary.disabled {
+    color: var(--gray4);
+    border-color: var(--gray4);
 }
 
 /* sections */
@@ -405,122 +430,6 @@ main>.section:first-of-type {
     main>.section>div {
         padding: 0 32px;
     }
-}
-
-@media(max-width: 480px) {
-    .container-padding,
-    .default-horizontal-padding {
-        padding-left: var(--container-padding-xs) !important;
-        padding-right: var(--container-padding-xs) !important
-    }
-}
-
-@media(min-width: 481px) and (max-width:768px) {
-    .container-padding,
-    .default-horizontal-padding {
-        padding-left: var(--container-padding-sm) !important;
-        padding-right: var(--container-padding-sm) !important
-    }
-}
-
-@media(min-width: 769px) and (max-width:992px) {
-    .container-padding,
-    .default-horizontal-padding {
-        padding-left: var(--container-padding-md) !important;
-        padding-right: var(--container-padding-md) !important
-    }
-}
-
-@media(min-width: 993px) and (max-width:1200px) {
-    .container-padding,
-    .default-horizontal-padding {
-        padding-left: var(--container-padding-lg) !important;
-        padding-right: var(--container-padding-lg) !important
-    }
-}
-
-@media(min-width: 1201px) and (max-width:1400px) {
-    .container-padding,
-    .default-horizontal-padding {
-        padding-left: var(--container-padding-xl) !important;
-        padding-right: var(--container-padding-xl) !important
-    }
-}
-
-@media(min-width: 1401px) {
-    .container-padding,
-    .default-horizontal-padding {
-        padding-left: var(--container-padding-xxl) !important;
-        padding-right: var(--container-padding-xxl) !important
-    }
-}
-
-.container-padding,
-.default-vertical-padding {
-    padding-bottom: 30px !important;
-    padding-top: 30px !important
-}
-
-@media(min-width: 769px) {
-    .container-padding,
-    .default-vertical-padding {
-        padding-bottom: 60px !important;
-        padding-top: 60px !important
-    }
-}
-
-@media(max-width: 480px) {
-    .container-fluid:not(.no-padding):not(.normal-padding),
-    .container:not(.no-padding):not(.normal-padding) {
-        padding-left: var(--container-padding-xs);
-        padding-right: var(--container-padding-xs);
-    }
-}
-
-@media(min-width: 481px) and (max-width:768px) {
-    .container-fluid:not(.no-padding):not(.normal-padding),
-    .container:not(.no-padding):not(.normal-padding) {
-        padding-left: var(--container-padding-sm);
-        padding-right: var(--container-padding-sm);
-    }
-}
-
-@media(min-width: 769px)and (max-width:992px) {
-    .container-fluid:not(.no-padding):not(.normal-padding),
-    .container:not(.no-padding):not(.normal-padding) {
-        padding-left: var(--container-padding-md);
-        padding-right: var(--container-padding-md)
-    }
-}
-
-@media(min-width: 993px)and (max-width:1200px) {
-    .container-fluid:not(.no-padding):not(.normal-padding),
-    .container:not(.no-padding):not(.normal-padding) {
-        padding-left: var(--container-padding-lg);
-        padding-right: var(--container-padding-lg);
-    }
-}
-
-@media(min-width: 1201px)and (max-width:1400px) {
-    .container-fluid:not(.no-padding):not(.normal-padding),
-    .container:not(.no-padding):not(.normal-padding) {
-        padding-left: var(--container-padding-xl);
-        padding-right: var(--container-padding-xl);
-    }
-}
-
-@media(min-width: 1401px) {
-    .container-fluid:not(.no-padding):not(.normal-padding),
-    .container:not(.no-padding):not(.normal-padding) {
-        padding-left: var(--container-padding-xxl);
-        padding-right: var(--container-padding-xxl);
-    }
-}
-
-.container-fluid.no-padding,
-.container.no-padding {
-    padding-left: 0;
-    padding-right: 0
 }
 
 /* section metadata */
