@@ -323,7 +323,8 @@ main img {
 }
 
 /* buttons */
-.button {
+a.button:any-link,
+button {
     border-radius: 4px;
     display: inline-block;
     font-family: var(--averta);
@@ -339,12 +340,15 @@ main img {
     border: none;
 }
 
-.button:active,
-.button:focus {
+a.button,
+a.button:active,
+a.button:focus,
+button:active,
+button:focus {
     box-shadow: none;
 }
-
-.button.primary {
+a.button.primary,
+button.primary {
     font-size: 12px;
     letter-spacing: 1.5px;
     line-height: 12px;
@@ -353,33 +357,41 @@ main img {
     border: 2px solid var(--blue4);
 }
 
-.button.primary:active {
+a.button.primary:active,
+button.primary:active {
     border-color: var(--blue-active-state) !important;
     background-color: var(--blue-active-state) !important;
     color: var(--white) !important;
 }
 
-.button.primary:disabled,
-.button.primary[disabled],
-.button.primary.disabled {
+a.button.primary:disabled,
+a.button.primary[disabled],
+a.button.primary.disabled,
+button.primary:disabled,
+button.primary[disabled],
+button.primary.disabled {
     background-color: var(--gray5);
     border-color: var(--gray5);
     color: var(--gray3);
 }
 
-.button.primary.inactive:hover,
-.button.primary.inactive:active {
+a.button.primary.inactive:hover,
+a.button.primary.inactive:active,
+button.primary.inactive:hover,
+button.primary.inactive:active {
     background-color: var(--blue4);
     border-color: var(--blue4);
     color: var(--white);
 }
 
-.button.primary:hover {
+a.button.primary:hover,
+button.primary:hover {
     background-color: var(--blue5);
     border-color: var(--blue5);
     color: var(--blue2);
 }
 
+a.button.secondary,
 button.secondary {
     background-color: transparent;
     border: 2px solid;
@@ -392,18 +404,23 @@ button.secondary {
     color: var(--gray3);
 }
 
+a.button.secondary:hover,
 button.secondary:hover {
     background-color: var(--blue5) !important;
     border-color: var(--blue5) !important;
     color: var(--blue2) !important;
 }
 
+a.button.secondary:active,
 button.secondary:active {
     color: var(--white) !important;
     border-color: var(--blue-active-state) !important;
     background-color: var(--blue-active-state) !important;
 }
 
+a.button.secondary:disabled,
+a.button.secondary[disabled],
+a.button.secondary.disabled,
 button.secondary:disabled,
 button.secondary[disabled],
 button.secondary.disabled {
