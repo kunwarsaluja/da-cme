@@ -14,7 +14,8 @@ module.exports = {
     'import/extensions': ['error', { js: 'always' }], // require js file extensions in imports
     'linebreak-style': ['error', 'unix'], // enforce unix linebreaks
     'no-param-reassign': [2, { props: false }], // allow modifying properties of param
-    'font-family-name-quotes': 'always-where-required',
-    'media-feature-range-notation': 'prefix',
+    'font-family-name-quotes': ['always-where-required'],
+    'media-feature-range-notation': ['prefix'],
+    'selector-not-notation': ['simple'],
   },
 };
