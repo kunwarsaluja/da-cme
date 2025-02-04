@@ -75,6 +75,7 @@ body {
     color: var(--text-color);
     font-family: var(--body-font-family);
     font-size: var(--body-font-size-s);
+    margin: 0;
 }
 
 @media (width >=769px) {
@@ -93,8 +94,10 @@ body.include-nav {
     }
 }
 
-header {
-    height: var(--nav-height);
+@media (min-width: 993px) {
+    main {
+        padding-top: 100px;
+    }
 }
 
 header .header,
@@ -105,6 +108,14 @@ footer .footer {
 header .header[data-block-status="loaded"],
 footer .footer[data-block-status="loaded"] {
     visibility: visible;
+}
+
+.header {
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: 1030;
+    background-color: var(--white);
 }
 
 h1,
