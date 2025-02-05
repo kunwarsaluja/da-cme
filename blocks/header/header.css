@@ -511,9 +511,19 @@ button.gnav-toggle:after {
         margin: 0;
     }
 
-    .gnav-navitem.has-Menu.is-Open .gnav-navitem-menu .item-menu-container .gnav-menu-container .gnav-subnav .gnav-subnavitem{
+    .gnav-navitem.has-Menu.is-Open .gnav-navitem-menu .item-menu-container .gnav-menu-container .gnav-subnav .gnav-subnavitem, 
+    .gnav-navitem.has-Menu.is-Open .gnav-navitem-menu .item-menu-container .gnav-menu-container .gnav-subnav [class^="gnav-subnavitem-group"] {
         width: 33%;
         display: inline-table;
+    }
+
+    .gnav-navitem.has-Menu:nth-child(3).is-Open .gnav-navitem-menu .item-menu-container .gnav-menu-container .gnav-subnav [class^="gnav-subnavitem-group"] {
+        width: 50%;
+        display: inline-table;
+    }
+
+    .gnav-navitem.has-Menu:nth-child(3).is-Open .gnav-navitem-menu .item-menu-container .gnav-menu-container .gnav-subnav [class^="gnav-subnavitem-group"] .gnav-subnavitem{
+        display: block;
     }
 
     .gnav-navitem.has-Menu.is-Open .gnav-navitem-menu .item-menu-container .gnav-menu-container .gnav-subnav .gnav-subnavitem .gnav-subnavitem-link{

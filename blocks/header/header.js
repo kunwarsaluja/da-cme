@@ -49,7 +49,7 @@ class Gnav {
         this.curtain.classList.remove(IS_OPEN);
       }
     };
-    toggle.addEventListener('click', async () => {
+    toggle.addEventListener('click', async() => {
       this.openNav(nav, onMediaChange);
     });
     return toggle;
@@ -57,7 +57,7 @@ class Gnav {
 
   decorateCloseNav = (nav) => {
     const closeNav = createTag('button', { class: 'icon-close gnav-close', 'aria-label': 'Navigation close menu', 'aria-expanded': false });
-    closeNav.addEventListener('click', async () => {
+    closeNav.addEventListener('click', async() => {
       this.closeNav(nav);
     });
     return closeNav;
@@ -65,7 +65,7 @@ class Gnav {
 
   decorateCurtain = (nav) => {
     const curtain = createTag('div', { class: 'gnav-curtain' });
-    curtain.addEventListener('click', async () => {
+    curtain.addEventListener('click', async() => {
       this.closeNav(nav);
     });
     return curtain;
@@ -127,14 +127,13 @@ class Gnav {
     });
   };
 
-  buildSubNav = (subNav, subNavLinks, subMenuType) => {
+  buildSubNav = (menu, subNav, subNavLinks, subMenuType) => {
+    const groupMap = new Map();
     subNavLinks.forEach((subNavLink, idx) => {
       const subNavItem = createTag('li', { class: 'gnav-subnavitem' });
       const subNavItemLink = createTag('a', { class: 'gnav-subnavitem-link' });
-      const subNavItemMenuContainer = subNavLink.parentElement.closest('div');
       const subMenu = subNavLink.parentElement.nextElementSibling.getElementsByTagName('li')[0].getElementsByTagName('ul')[0];
-      subNavItemMenuContainer.querySelector('p').remove();
-      subNavItemLink.appendChild(subNavLink);
+      subNavItemLink.appendChild(subNavLink.cloneNode(true));
       subNavItem.appendChild(subNavItemLink);
       subNavItem.classList.add(subMenuType);
 
@@ -145,12 +144,21 @@ class Gnav {
         subNavItemLink.setAttribute('role', 'button');
         subNavItemLink.setAttribute('aria-expanded', false);
         subNavItemLink.setAttribute('aria-controls', id);
-
         const decoratedMenu = this.decorateSubMenu(subNavItem, subNavItemLink, subMenu);
         subNavItem.appendChild(decoratedMenu);
-      }
 
-      subNav.appendChild(subNavItem);
+        const parentDiv = subNavLink.closest('div');
+        if (parentDiv && parentDiv.querySelector('ul + p em')) {
+          const groupName = parentDiv.querySelector('ul + p em').textContent.trim();
+          if (!groupMap.has(groupName)) {
+            groupMap.set(groupName, createTag('div', { class: `gnav-subnavitem-group-${groupName}` }));
+            subNav.appendChild(groupMap.get(groupName));
+          }
+          groupMap.get(groupName).appendChild(subNavItem);
+        } else {
+          subNav.appendChild(subNavItem);
+        }
+      }
     });
   };
 
@@ -159,13 +167,17 @@ class Gnav {
     const container = createTag('div', { class: 'gnav-menu-container' });
     const subNav = createTag('ul', { class: 'gnav-subnav' });
     const subMenuLi = menu.querySelectorAll('p em');
+    const menuDivs = Array.from(menu.querySelectorAll('div'));
+    const divsForMenu = menuDivs.filter((div) => div.querySelector('p'));
+    const classColNumber = `sub-menu-col-${divsForMenu.length}`;
     if (subMenuLi.length > 0) {
-      this.buildSubNav(subNav, subMenuLi, 'sub-nav');
+      this.buildSubNav(menu, subNav, subMenuLi, 'sub-nav');
     }
     container.append(subNav);
     menu.innerHTML = '';
     const desktopMenuContainer = createTag('div', { class: 'item-menu-container' });
     const desktopMenuColumn = createTag('div', { class: 'item-menu-column' });
+    desktopMenuContainer.classList.add(classColNumber);
     menu.append(desktopMenuContainer);
     desktopMenuContainer.append(desktopMenuColumn);
     desktopMenuColumn.append(menuHomeLink);
@@ -233,6 +245,8 @@ class Gnav {
 
   closeMenu = (el) => {
     el.classList.remove(IS_OPEN);
+    this.curtain.classList.remove(IS_OPEN);
+    document.body.classList.remove('curtain-visible');
     document.removeEventListener('click', this.closeOnDocClick);
     window.removeEventListener('keydown', this.closeOnEscape);
     const menuToggle = el.querySelector('[aria-expanded]');
@@ -242,15 +256,11 @@ class Gnav {
   openMenu = (el) => {
     el.classList.add(IS_OPEN);
     this.curtain.classList.add(IS_OPEN);
+    document.body.classList.add('curtain-visible');
     const menuToggle = el.querySelector('[aria-expanded]');
     menuToggle.setAttribute('aria-expanded', true);
     document.addEventListener('click', this.closeOnDocClick);
     window.addEventListener('keydown', this.closeOnEscape);
-    const desktop = window.matchMedia('(min-width: 1200px)');
-    if (desktop.matches) {
-      // don't allow scroll
-      // document.addEventListener('scroll', this.closeOnScroll, { passive: true });
-    }
   };
 
   toggleOnSpace = (e) => {

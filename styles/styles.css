@@ -84,8 +84,8 @@ body {
     }
 }
 
-body.include-nav {
-    margin-top: 100px; /* navbar height */
+body.curtain-visible {
+    overflow: hidden;
 }
 
 @media (width >=993px) {
