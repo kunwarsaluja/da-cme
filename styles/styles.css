@@ -94,9 +94,22 @@ body.curtain-visible {
     }
 }
 
-@media (min-width: 993px) {
+@media (width >=993px) {
     main {
         padding-top: 100px;
+    }
+}
+
+.header {
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: 1030;
+}
+
+@media (width >= 993px) {
+    .header {
+        background-color: var(--white);
     }
 }
 
@@ -108,14 +121,6 @@ footer .footer {
 header .header[data-block-status="loaded"],
 footer .footer[data-block-status="loaded"] {
     visibility: visible;
-}
-
-.header {
-    left: 0;
-    position: fixed;
-    right: 0;
-    z-index: 1030;
-    background-color: var(--white);
 }
 
 h1,

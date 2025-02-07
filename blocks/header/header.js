@@ -1,9 +1,20 @@
 import { createTag } from '../block-helpers.js';
+import { loadFragment } from '../fragment/fragment.js';
 
-const BRAND_IMG = '<img loading="lazy" alt="Adobe" src="/blocks/gnav/adobe-logo.svg">';
-const IS_OPEN = 'is-Open';
+const BRAND_IMG = '<img loading="lazy" alt="Adobe" src="/blocks/nav/adobe-logo.svg">';
+const IS_OPEN = 'is-open';
 
-class Gnav {
+async function loadTabContent(fragmentPath) {
+  try {
+    return await loadFragment(fragmentPath);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Error loading fragment: ${fragmentPath}`, error);
+    return null;
+  }
+}
+
+class Nav {
   constructor(body, el) {
     this.el = el;
     this.body = body;
@@ -11,11 +22,11 @@ class Gnav {
     this.desktop = window.matchMedia('(min-width: 1200px)');
   }
 
-  init = () => {
+  init = async () => {
     this.state = {};
-    this.curtain = createTag('div', { class: 'gnav-curtain' });
-    const nav = createTag('nav', { class: 'gnav' });
-    const fauxNavbar = createTag('div', { class: 'gnav-faux-navbar' });
+    this.curtain = createTag('div', { class: 'nav-curtain' });
+    const nav = createTag('nav', { class: 'nav' });
+    const fauxNavbar = createTag('div', { class: 'nav-faux-navbar' });
 
     const brand = this.decorateBrand();
     if (brand) {
@@ -30,18 +41,57 @@ class Gnav {
     fauxNavbar.append(mobileToggle);
     nav.append(mobileCloseNav);
 
-    const mainNav = this.decorateMainNav();
+    const mainNav = await this.decorateMainNav();
     if (mainNav) {
       nav.append(mainNav);
     }
 
-    const wrapper = createTag('div', { class: 'gnav-wrapper' }, nav);
+    const wrapper = createTag('div', { class: 'nav-wrapper' }, nav);
     this.el.append(this.curtain, fauxNavbar);
     this.el.append(this.curtain, wrapper);
+
+    let prevWindowWidth = window.innerWidth;
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const windowWidth = window.innerWidth;
+        const crossedBreakpointDown = (prevWindowWidth > 993 && windowWidth <= 992);
+        const crossedBreakpointUp = (prevWindowWidth <= 992 && windowWidth > 993);
+        if (crossedBreakpointDown) {
+          const openMenu = document.querySelector('.has-menu.is-open');
+          if (openMenu) {
+            this.toggleMenu(openMenu);
+          }
+        }
+        if (crossedBreakpointUp) {
+          const openNavbar = document.querySelector('.nav.is-open');
+          if (openNavbar) {
+            this.closeNav(openNavbar);
+          }
+        }
+        prevWindowWidth = windowWidth;
+      }, 250);
+    });
+
+    let previousScrollPosition = window.scrollY;
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const currentScrollPosition = window.scrollY;
+        if (currentScrollPosition > previousScrollPosition) {
+          document.body.classList.add('scrolling-down');
+        } else {
+          document.body.classList.remove('scrolling-down');
+        }
+        previousScrollPosition = currentScrollPosition;
+      }, 100);
+    });
   };
 
   decorateToggle = (nav) => {
-    const toggle = createTag('button', { class: 'icon-toggle gnav-toggle', 'aria-label': 'Navigation menu', 'aria-expanded': false });
+    const toggle = createTag('button', { class: 'icon-toggle nav-toggle', 'aria-label': 'Navigation menu', 'aria-expanded': false });
     const onMediaChange = (e) => {
       if (e.matches) {
         nav.parentElement.classList.remove(IS_OPEN);
@@ -49,30 +99,36 @@ class Gnav {
         this.curtain.classList.remove(IS_OPEN);
       }
     };
-    toggle.addEventListener('click', async() => {
+    toggle.addEventListener('click', async () => {
       this.openNav(nav, onMediaChange);
     });
     return toggle;
   };
 
   decorateCloseNav = (nav) => {
-    const closeNav = createTag('button', { class: 'icon-close gnav-close', 'aria-label': 'Navigation close menu', 'aria-expanded': false });
-    closeNav.addEventListener('click', async() => {
+    const closeNav = createTag('button', { class: 'icon-close nav-close', 'aria-label': 'Navigation close menu', 'aria-expanded': false });
+    closeNav.addEventListener('click', async () => {
       this.closeNav(nav);
     });
     return closeNav;
   };
 
   decorateCurtain = (nav) => {
-    const curtain = createTag('div', { class: 'gnav-curtain' });
-    curtain.addEventListener('click', async() => {
+    const curtain = createTag('div', { class: 'nav-curtain' });
+    const desktop = window.matchMedia('(min-width: 993px)');
+    if (desktop.matches) {
+      curtain.addEventListener('click', async () => {
+        this.toggleMenu(document.querySelector('.has-menu.is-open'));
+      });
+    }
+    curtain.addEventListener('click', async () => {
       this.closeNav(nav);
     });
     return curtain;
   };
 
   decorateBrand = () => {
-    const brandBlock = this.body.querySelector('[class^="gnav-brand"]');
+    const brandBlock = this.body.querySelector('[class^="nav-brand"]');
     if (!brandBlock) return null;
     const brand = brandBlock.querySelector('a');
 
@@ -86,43 +142,51 @@ class Gnav {
     return brand;
   };
 
-  decorateMainNav = () => {
-    const mainNav = createTag('ul', { class: 'gnav-mainnav' });
+  decorateMainNav = async () => {
+    const mainNav = createTag('ul', { class: 'nav-main-nav' });
     const primaryLinks = this.body.querySelectorAll('.primary h2 > a');
-    if (primaryLinks.length > 0) {
-      this.buildMainNav(mainNav, primaryLinks, 'primary');
-    }
-    const navItem = createTag('li', { class: 'gnav-navitem' });
-    navItem.classList.add('divider');
-    mainNav.appendChild(navItem);
     const secondaryLinks = this.body.querySelectorAll('.secondary h2 > a');
-    if (secondaryLinks.length > 0) {
-      this.buildMainNav(mainNav, secondaryLinks, 'secondary');
-    }
+
+    await Promise.all([
+      this.buildMainNav(mainNav, primaryLinks, 'primary'),
+      this.buildMainNav(mainNav, secondaryLinks, 'secondary'),
+    ]);
+
     return mainNav;
   };
 
-  buildMainNav = (mainNav, navLinks, menuType) => {
-    navLinks.forEach((navLink, idx) => {
-      const navItem = createTag('li', { class: 'gnav-navitem' });
+  buildMainNav = async (mainNav, navLinks, menuType) => {
+    const promises = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [idx, navLink] of navLinks.entries()) {
+      const navItem = createTag('li', { class: 'nav-nav-item' });
       const navItemMenuContainer = navLink.closest('div');
       const mainHomeContainer = navItemMenuContainer.nextElementSibling;
       const menu = mainHomeContainer.parentElement.nextElementSibling;
       navItemMenuContainer.querySelector('h2').remove();
       navItem.appendChild(navLink);
       navItem.classList.add(menuType);
-
       if (menu.childElementCount > 0) {
-        const id = `navmenu-${idx}`;
+        const id = `nav-menu-${idx}`;
         menu.id = id;
-        navItem.classList.add('has-Menu');
+        navItem.classList.add('has-menu');
         navLink.setAttribute('role', 'button');
         navLink.setAttribute('aria-expanded', false);
         navLink.setAttribute('aria-controls', id);
         mainHomeContainer.classList.add('main-home-link');
-        const decoratedMenu = this.decorateMenu(navItem, navLink, menu, mainHomeContainer);
-        navItem.appendChild(decoratedMenu);
+        promises.push(this.decorateMenu(navItem, navLink, menu, mainHomeContainer)
+          .then((decoratedMenu) => {
+            navItem.appendChild(decoratedMenu);
+            return navItem;
+          }));
+      } else {
+        promises.push(Promise.resolve(navItem));
       }
+    }
+
+    const resolvedNavItems = await Promise.all(promises);
+
+    resolvedNavItems.forEach((navItem) => {
       mainNav.appendChild(navItem);
     });
   };
@@ -130,17 +194,17 @@ class Gnav {
   buildSubNav = (menu, subNav, subNavLinks, subMenuType) => {
     const groupMap = new Map();
     subNavLinks.forEach((subNavLink, idx) => {
-      const subNavItem = createTag('li', { class: 'gnav-subnavitem' });
-      const subNavItemLink = createTag('a', { class: 'gnav-subnavitem-link' });
+      const subNavItem = createTag('li', { class: 'nav-subnav-item' });
+      const subNavItemLink = createTag('a', { class: 'nav-subnav-item-link' });
       const subMenu = subNavLink.parentElement.nextElementSibling.getElementsByTagName('li')[0].getElementsByTagName('ul')[0];
       subNavItemLink.appendChild(subNavLink.cloneNode(true));
       subNavItem.appendChild(subNavItemLink);
       subNavItem.classList.add(subMenuType);
 
       if (subMenu.childElementCount > 0) {
-        const id = `navsubmenu-${idx}`;
+        const id = `nav-submenu-${idx}`;
         subMenu.id = id;
-        subNavItem.classList.add('has-Menu');
+        subNavItem.classList.add('has-menu');
         subNavItemLink.setAttribute('role', 'button');
         subNavItemLink.setAttribute('aria-expanded', false);
         subNavItemLink.setAttribute('aria-controls', id);
@@ -151,7 +215,7 @@ class Gnav {
         if (parentDiv && parentDiv.querySelector('ul + p em')) {
           const groupName = parentDiv.querySelector('ul + p em').textContent.trim();
           if (!groupMap.has(groupName)) {
-            groupMap.set(groupName, createTag('div', { class: `gnav-subnavitem-group-${groupName}` }));
+            groupMap.set(groupName, createTag('div', { class: `nav-subnav-item-group-${groupName}` }));
             subNav.appendChild(groupMap.get(groupName));
           }
           groupMap.get(groupName).appendChild(subNavItem);
@@ -162,10 +226,32 @@ class Gnav {
     });
   };
 
-  decorateMenu = (navItem, navLink, menu, menuHomeLink) => {
-    menu.className = 'gnav-navitem-menu';
-    const container = createTag('div', { class: 'gnav-menu-container' });
-    const subNav = createTag('ul', { class: 'gnav-subnav' });
+  // eslint-disable-next-line class-methods-use-this
+  decoratePromoBox = async (menuPromo) => {
+    const promoBox = createTag('div', { class: 'promo-box-subnav' });
+    const fragmentPromises = [];
+
+    if (menuPromo) {
+      const fragmentPath = menuPromo.getAttribute('href');
+      fragmentPromises.push(loadTabContent(fragmentPath)
+        .then((fragment) => ({ fragment })));
+    }
+
+    const fragments = await Promise.all(fragmentPromises);
+    fragments.forEach(({ fragment }) => {
+      if (fragment) {
+        promoBox.append(...fragment.children);
+      }
+    });
+
+    return promoBox;
+  };
+
+  decorateMenu = async (navItem, navLink, menu, menuHomeLink) => {
+    menu.className = 'nav-nav-item-menu';
+    const menuPromo = menu.querySelector('div > a[href*="/fragment"]');
+    const container = createTag('div', { class: 'nav-menu-container' });
+    const subNav = createTag('ul', { class: 'nav-subnav' });
     const subMenuLi = menu.querySelectorAll('p em');
     const menuDivs = Array.from(menu.querySelectorAll('div'));
     const divsForMenu = menuDivs.filter((div) => div.querySelector('p'));
@@ -182,9 +268,10 @@ class Gnav {
     desktopMenuContainer.append(desktopMenuColumn);
     desktopMenuColumn.append(menuHomeLink);
     desktopMenuColumn.append(container);
-    // import promo boxes
-    const promoBoxes = createTag('div', { class: 'promoBox-subnav' });
-    desktopMenuContainer.append(promoBoxes);
+
+    const promoBox = await this.decoratePromoBox(menuPromo);
+    desktopMenuContainer.append(promoBox);
+
     navLink.addEventListener('focus', () => {
       window.addEventListener('keydown', this.toggleOnSpace);
     });
@@ -200,7 +287,7 @@ class Gnav {
   };
 
   decorateSubMenu = (subNavItem, subNavLink, subMenu) => {
-    subMenu.className = 'gnav-navitem-submenu';
+    subMenu.className = 'nav-nav-item-submenu';
     subNavLink.addEventListener('focus', () => {
       window.addEventListener('keydown', this.toggleOnSpace);
     });
@@ -227,7 +314,7 @@ class Gnav {
       nav.parentElement.classList.remove(IS_OPEN);
       nav.classList.remove(IS_OPEN);
       this.curtain.classList.remove(IS_OPEN);
-      const allElOpen = nav.querySelectorAll('.is-Open');
+      const allElOpen = nav.querySelectorAll('.is-open');
       // eslint-disable-next-line no-plusplus
       for (let i = 0; i < allElOpen.length; i++) {
         this.closeMenu(allElOpen[i]);
@@ -236,7 +323,16 @@ class Gnav {
   };
 
   toggleMenu = (el) => {
-    if (el && el.classList.contains('is-Open')) {
+    const desktop = window.matchMedia('(min-width: 993px)');
+    if (desktop.matches) {
+      const elSiblings = Array.from(el.parentNode.children);
+      elSiblings.forEach((sibling) => {
+        if (sibling.classList.contains('is-open') && sibling !== el) {
+          this.closeMenu(sibling);
+        }
+      });
+    }
+    if (el && el.classList.contains('is-open')) {
       this.closeMenu(el);
     } else {
       this.openMenu(el);
@@ -266,53 +362,34 @@ class Gnav {
   toggleOnSpace = (e) => {
     if (e.code === 'Space') {
       e.preventDefault();
-      const parentEl = e.target.closest('.has-Menu');
+      const parentEl = e.target.closest('.has-menu');
       this.toggleMenu(parentEl);
-    }
-  };
-
-  closeOnScroll = () => {
-    let scrolled;
-    if (!scrolled) {
-      if (this.state.openMenu) {
-        this.toggleMenu(this.state.openMenu);
-      }
-      scrolled = true;
-      document.removeEventListener('scroll', this.closeOnScroll);
-    }
-  };
-
-  closeOnDocClick = (e) => {
-    const closest = e.target.closest(`.${IS_OPEN}`);
-    const isCurtain = e.target === this.curtain;
-    if ((this.state.openMenu && !closest) || isCurtain) {
-      this.toggleMenu(this.state.openMenu);
     }
   };
 
   closeOnEscape = (e) => {
     if (e.code === 'Escape') {
-      this.toggleMenu(this.state.openMenu);
+      this.toggleMenu(document.querySelector('.has-menu.is-open'));
     }
   };
 }
 
-async function fetchGnav(url) {
+async function fetchNav(url) {
   const resp = await fetch(`${url}.plain.html`);
   const html = await resp.text();
   return html;
 }
 
 export default async function init(blockEl) {
-  const url = blockEl.getAttribute('data-gnav-source') || '/drafts/ramiro/nav';
+  const url = blockEl.getAttribute('data-nav-source');
   if (url) {
-    const html = await fetchGnav(url);
+    const html = await fetchNav(url);
     if (html) {
       try {
         const parser = new DOMParser();
-        const gnavDoc = parser.parseFromString(html, 'text/html');
-        const gnav = new Gnav(gnavDoc.body, blockEl);
-        gnav.init();
+        const navDoc = parser.parseFromString(html, 'text/html');
+        const nav = new Nav(navDoc.body, blockEl);
+        nav.init();
       } catch {
         // eslint-disable-next-line no-console
         console.log('Could not create global navigation.');
