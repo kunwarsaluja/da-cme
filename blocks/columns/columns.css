@@ -1,6 +1,6 @@
 .columns {
-  --columns-gap: 48px;
-  --border-color: #c2cace;
+  --columns-gap: 3rem;
+  --border-color: var(--gray4);
 }
 
 .columns > div {
@@ -50,8 +50,7 @@
 @media (width > 1200px) {
   main > .section > div:has(.columns.article) {
     max-width: 100%;
-    padding-left: 54px;
-    padding-right: 54px;
+    padding-inline: 5.5rem;
   }
 
   .columns.article {

@@ -1,11 +1,11 @@
 import { getArticleRelatedMetadata } from '../../scripts/utils.js';
 
 export default function decorate(block) {
-  const isLabelsVariant = block.classList.contains('labels');
+  const isArticleVariant = block.classList.contains('article');
   const {
-    template, readTime, author, tag, date,
+    readTime, author, tag, date,
   } = getArticleRelatedMetadata();
-  if (isLabelsVariant && template === 'article') {
+  if (isArticleVariant) {
     const h1 = block.querySelector('h1');
     const labelsWrapper = document.createElement('div');
     labelsWrapper.classList.add('labels-wrapper');
@@ -24,8 +24,11 @@ export default function decorate(block) {
         </span>
         <span class="article-featured-tag">${tag}</span>
         <a class="bookmark" href="#">
-          <span id="tooltip-saved" class="icon icon-bookmark-outlined">
+          <span class="tooltip-saved show icon icon-bookmark-outlined">
             <img data-icon-name="bookmark" src="/icons/bookmark-outlined.svg" alt="" loading="lazy">
+          </span>
+          <span class="tooltip-saved icon icon-bookmark-filled">
+            <img data-icon-name="bookmark" src="/icons/bookmark-filled.svg" alt="" loading="lazy">
           </span>
           <span class="save-text">Save</span>
         </a>
@@ -42,15 +45,13 @@ export default function decorate(block) {
     block.prepend(labelsWrapper);
     h1.remove();
 
-    const bookmark = document.querySelector('.hero.labels .row .bookmark');
-    const tooltip = document.querySelector('#tooltip-saved');
+    const bookmark = document.querySelector('.hero.article .row .bookmark');
+    const tooltips = document.querySelectorAll('.tooltip-saved');
     bookmark.addEventListener('mouseenter', () => {
-      tooltip.classList.remove('icon-bookmark-outlined');
-      tooltip.classList.add('icon-bookmark-filled');
+      tooltips.forEach((tooltip) => { tooltip.classList.toggle('show') });
     });
     bookmark.addEventListener('mouseleave', () => {
-      tooltip.classList.remove('icon-bookmark-filled');
-      tooltip.classList.add('icon-bookmark-outlined');
+      tooltips.forEach((tooltip) => { tooltip.classList.toggle('show'); });
     });
     bookmark.addEventListener('click', () => {
       // TODO: Add bookmark functionality

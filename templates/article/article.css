@@ -1,28 +1,24 @@
 @media (width > 480px) {
   main > .section:not(.full-width) > div {
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-inline: 2rem;
   }
 }
 
 @media (width > 768px) {
   main > .section:not(.full-width) > div {
-    padding-left: 54px;
-    padding-right: 54px;
+    padding-inline: 3.375rem;
   }
 }
 
 @media (width > 992px) {
   main > .section:not(.full-width) > div {
-    padding-left: 66px;
-    padding-right: 66px;
+    padding-inline: 4.125rem;
   }
 }
 
 @media (width > 1200px) {
   main > .section:not(.full-width) > div {
-    max-width: calc(66.66666% - 218px);
-    padding-left: .9375rem;
-    padding-right: .9375rem;
+    max-width: calc(66.66666% - 13.625rem);
+    padding-inline: .9375rem;
   }
 }
