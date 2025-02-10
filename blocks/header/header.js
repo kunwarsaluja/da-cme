@@ -381,7 +381,7 @@ async function fetchNav(url) {
 }
 
 export default async function init(blockEl) {
-  const url = blockEl.getAttribute('data-nav-source');
+  const url = blockEl.getAttribute('data-nav-source') || '/nav';
   if (url) {
     const html = await fetchNav(url);
     if (html) {
