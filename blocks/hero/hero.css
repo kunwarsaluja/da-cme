@@ -7,6 +7,14 @@
   position: relative;
   padding: 40px 24px;
   min-height: 300px;
+
+  --centered-title-width: 70%;
+}
+
+.hero.centered-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero h1 {
@@ -15,6 +23,58 @@
   margin-right: auto;
   color: var(--background-color);
 }
+
+.hero.centered-title h1 {
+  text-align: center;
+  width: var(--centered-title-width);
+}
+
+.hero.labels {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero.labels > .labels-wrapper {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  gap: 14rem;
+  width: var(--centered-title-width);
+}
+
+.hero.labels .row {
+  flex: 1;
+  display: flex;
+  color: var(--background-color);
+  align-items: center;
+  font-size: var(--body-font-size-s);
+  line-height: 1.25rem;
+  letter-spacing: .0906rem;
+}
+
+.hero.labels .row > * {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.hero.labels .row .article-time {
+  text-transform: uppercase;
+}
+
+.hero.labels .row .icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+  color: var(--blue5);
+}
+
+.hero.labels .row .bookmark {
+  text-decoration: none;
+}
+
 
 .hero picture {
   position: absolute;
@@ -28,6 +88,7 @@
   object-fit: cover;
   width: 100%;
   height: 100%;
+  object-position: 0 0;
 }
 
 @media (width >= 900px) {
