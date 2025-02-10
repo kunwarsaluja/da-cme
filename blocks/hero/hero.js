@@ -48,7 +48,7 @@ export default function decorate(block) {
     const bookmark = document.querySelector('.hero.article .row .bookmark');
     const tooltips = document.querySelectorAll('.tooltip-saved');
     bookmark.addEventListener('mouseenter', () => {
-      tooltips.forEach((tooltip) => { tooltip.classList.toggle('show') });
+      tooltips.forEach((tooltip) => { tooltip.classList.toggle('show'); });
     });
     bookmark.addEventListener('mouseleave', () => {
       tooltips.forEach((tooltip) => { tooltip.classList.toggle('show'); });
