@@ -49,7 +49,7 @@
   align-items: center;
   font-size: var(--body-font-size-s);
   line-height: 1.25rem;
-  letter-spacing: .090625rem;
+  letter-spacing: .0906rem;
 }
 
 .hero.labels .row > * {

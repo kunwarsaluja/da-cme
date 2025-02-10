@@ -2,7 +2,9 @@ import { getArticleRelatedMetadata } from '../../scripts/utils.js';
 
 export default function decorate(block) {
   const isLabelsVariant = block.classList.contains('labels');
-  const { template, readTime, author, tag, date } = getArticleRelatedMetadata();
+  const {
+    template, readTime, author, tag, date,
+  } = getArticleRelatedMetadata();
   if (isLabelsVariant && template === 'article') {
     const labelsWrapper = document.createElement('div');
     labelsWrapper.classList.add('labels-wrapper');
