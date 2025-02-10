@@ -1,4 +1,4 @@
-.hero-container .hero-wrapper {
+.hero-container .hero-wrapper:not(:has(.article)) {
   max-width: unset;
   padding: 0;
 }
@@ -8,13 +8,15 @@
   padding: 40px 24px;
   min-height: 300px;
 
-  --centered-title-width: 70%;
+  --centered-title-width: 60%;
 }
 
-.hero.centered-title {
+.hero.article {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 3.875rem;
+  padding-top: 3.8125rem;
 }
 
 .hero h1 {
@@ -24,7 +26,7 @@
   color: var(--background-color);
 }
 
-.hero.centered-title h1 {
+.hero.article h1 {
   text-align: center;
   width: var(--centered-title-width);
 }
@@ -37,8 +39,7 @@
 .hero.labels > .labels-wrapper {
   display: flex;
   flex-direction: column;
-  position: absolute;
-  gap: 14rem;
+  gap: 2rem;
   width: var(--centered-title-width);
 }
 
@@ -61,6 +62,14 @@
   gap: 0.5rem;
 }
 
+.hero.labels .row > *:first-child {
+  justify-content: flex-start;
+}
+
+.hero.labels .row > *:last-child {
+  justify-content: flex-end;
+}
+
 .hero.labels .row .article-time {
   text-transform: uppercase;
 }
@@ -69,6 +78,10 @@
   width: 0.9375rem;
   height: 0.9375rem;
   color: var(--blue5);
+}
+
+.hero.labels .row .icon img {
+  filter: var(--blue5-filter);
 }
 
 .hero.labels .row .bookmark {
@@ -94,5 +107,31 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+.hero-container .hero-wrapper:has(.article) {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+@media (width > 768px) {
+  .hero-container .hero-wrapper:has(.article) {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (width > 992px) {
+  .hero-container .hero-wrapper:has(.article) {
+    padding-left: 43px;
+    padding-right: 43px;
+  }
+}
+
+@media (width > 1200px) {
+  .hero-container .hero-wrapper:has(.article) {
+    padding-left: 66px;
+    padding-right: 66px;
   }
 }

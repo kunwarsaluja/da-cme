@@ -36,13 +36,26 @@
     position: relative;
   }
 
-  .columns.right-border > div > div:not(:last-child) {
+  .columns.article > div > div:not(:last-child) {
     border-right: .0625rem solid var(--border-color);
     padding-right: calc(var(--columns-gap) / 2);
   }
 
-  .columns.no-gap-top > div > div > *:first-child {
+  .columns.article > div > div > *:first-child {
     padding-top: 0;
     margin-top: 0;
+  }
+}
+
+@media (width > 1200px) {
+  main > .section > div:has(.columns.article) {
+    max-width: 100%;
+    padding-left: 54px;
+    padding-right: 54px;
+  }
+
+  .columns.article {
+    padding-left: 1.875rem;
+    padding-right: 1.875rem;
   }
 }
