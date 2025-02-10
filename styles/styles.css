@@ -457,3 +457,17 @@ main .section.highlight {
     margin: 0;
     padding: 40px 0;
 }
+
+main .section.blue2-background {
+    background-color: var(--blue2);
+}
+
+main .section.reverse,
+main .section.reverse h2 {
+    color: var(--white);
+}
+
+main .section.align-center {
+    padding-bottom: 3.75rem;
+    padding-top: 3.75rem;
+}
