@@ -75,6 +75,7 @@ body {
     color: var(--text-color);
     font-family: var(--body-font-family);
     font-size: var(--body-font-size-s);
+    margin: 0;
 }
 
 @media (width >=769px) {
@@ -83,8 +84,8 @@ body {
     }
 }
 
-body.include-nav {
-    margin-top: 100px; /* navbar height */
+body.curtain-visible {
+    overflow: hidden;
 }
 
 @media (width >=993px) {
@@ -93,8 +94,23 @@ body.include-nav {
     }
 }
 
-header {
-    height: var(--nav-height);
+@media (width >=993px) {
+    main {
+        padding-top: 100px;
+    }
+}
+
+.header {
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: 1030;
+}
+
+@media (width >= 993px) {
+    .header {
+        background-color: var(--white);
+    }
 }
 
 header .header,
