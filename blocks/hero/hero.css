@@ -84,11 +84,11 @@
   text-decoration: none;
 }
 
-.hero.article .row .tooltip-saved {
+.hero.article .bookmark .icon {
   display: none;
 }
 
-.hero.article .row .tooltip-saved.show {
+.hero.article .bookmark .icon.show {
   display: inline-block;
 }
 
