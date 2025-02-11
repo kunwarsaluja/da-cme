@@ -1,6 +1,10 @@
-.hero-container .hero-wrapper {
+.hero-container .hero-wrapper:not(:has(.article)) {
   max-width: unset;
   padding: 0;
+}
+
+.hero-container .hero-wrapper:has(.article) {
+  padding-inline: 10px;
 }
 
 .hero {
@@ -8,13 +12,16 @@
   padding: 40px 24px;
   min-height: 300px;
 
-  --centered-title-width: 70%;
+  --centered-title-width: 60%;
 }
 
-.hero.centered-title {
+.hero.article {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-bottom: 3.875rem;
+  padding-top: 3.8125rem;
 }
 
 .hero h1 {
@@ -24,25 +31,19 @@
   color: var(--background-color);
 }
 
-.hero.centered-title h1 {
+.hero.article h1 {
   text-align: center;
   width: var(--centered-title-width);
 }
 
-.hero.labels {
+.hero.article > .labels-wrapper {
   display: flex;
   flex-direction: column;
-}
-
-.hero.labels > .labels-wrapper {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  gap: 14rem;
+  gap: 2rem;
   width: var(--centered-title-width);
 }
 
-.hero.labels .row {
+.hero.article .row {
   flex: 1;
   display: flex;
   color: var(--background-color);
@@ -52,7 +53,7 @@
   letter-spacing: .0906rem;
 }
 
-.hero.labels .row > * {
+.hero.article .row > * {
   flex: 1;
   text-align: center;
   display: flex;
@@ -61,20 +62,35 @@
   gap: 0.5rem;
 }
 
-.hero.labels .row .article-time {
+.hero.article .row > *:first-child {
+  justify-content: flex-start;
+}
+
+.hero.article .row > *:last-child {
+  justify-content: flex-end;
+}
+
+.hero.article .row .article-time {
   text-transform: uppercase;
 }
 
-.hero.labels .row .icon {
+.hero.article .row .icon {
   width: 0.9375rem;
   height: 0.9375rem;
   color: var(--blue5);
 }
 
-.hero.labels .row .bookmark {
+.hero.article .row .bookmark {
   text-decoration: none;
 }
 
+.hero.article .bookmark .icon {
+  display: none;
+}
+
+.hero.article .bookmark .icon.show {
+  display: inline-block;
+}
 
 .hero picture {
   position: absolute;
@@ -91,8 +107,28 @@
   object-position: 0 0;
 }
 
-@media (width >= 900px) {
+.hero.article .row .icon img {
+  filter: var(--blue5-filter);
+}
+
+@media (width > 768px) {
+  .hero-container .hero-wrapper:has(.article) {
+    padding-inline: 2rem;
+  }
+}
+
+@media (width > 992px) {
   .hero {
     padding: 40px 32px;
+  }
+
+  .hero-container .hero-wrapper:has(.article) {
+    padding-inline: 2.6875rem;
+  }
+}
+
+@media (width > 1200px) {
+  .hero-container .hero-wrapper:has(.article) {
+    padding-inline: 4.125rem;
   }
 }
