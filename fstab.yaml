@@ -1,5 +1,7 @@
 mountpoints:
-  /: https://drive.google.com/drive/folders/1efJvPLWKK0vdFzIWQPgFL0GP1skbXXek
+  /:
+    url: https://content.da.live/kunwarsaluja/da-cme/
+    type: markup
 
 folders:
   /education/events/econoday/: /education/events/econoday  
