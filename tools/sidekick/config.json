@@ -6,9 +6,10 @@
       {
         "id": "library",
         "title": "Library",
-        "environments": ["edit"],
-        "url": "/tools/sidekick/library.html",
-        "includePaths": ["**.docx**"]
+        "environments": [
+          "edit"
+        ],
+        "url": "/tools/sidekick/library/library.html"
       }
     ]
   }
