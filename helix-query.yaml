@@ -4,9 +4,9 @@ indices:
     include:
       - /**
     exclude:
-      - **/drafts/**
-      - **/fragments/**
-      - **/eds-config/**
+      - "**/drafts/**"
+      - "**/fragments/**"
+      - "**/eds-config/**"
     target: /query-index.json
     properties:
       title:
