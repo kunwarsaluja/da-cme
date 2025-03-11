@@ -10,6 +10,16 @@
           "edit"
         ],
         "url": "/tools/sidekick/library/library.html"
+      },
+      {
+        "id": "scheduler",
+        "title": "Scheduler", 
+        "environments": ["edit"],
+        "daLibrary": true,
+        "includePaths": ["DA"],
+        "experience": "dialog",
+        "icon": "https://main--da-cme--kunwarsaluja.aem.page/aemedge/icons/history.svg",
+        "path": "/tools/scheduler/scheduler.html"
       }
     ]
   }
