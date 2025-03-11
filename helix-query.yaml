@@ -3,12 +3,6 @@ indices:
   default:
     include:
       - /**
-    exclude:
-      - '/drafts/**'
-      - '/tools/sidekick/**'
-      - '/fragments/**'
-      - '/nav'
-      - '/footer'
     target: /query-index.json
     properties:
       title:
@@ -22,7 +16,7 @@ indices:
         value: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
-        value: attribute(el, "content")
+        value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
       locale:
         select: head > meta[name="locale"]
         value: attribute(el, "content")
