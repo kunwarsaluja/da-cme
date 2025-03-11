@@ -1,12 +1,11 @@
 version: 1
 indices:
-  blogs:
+  default:
     include:
-      - '/whatson/**'
+      - '/**'
     exclude:
       - '/drafts/**'
       - '/fragments/**'
-      - '/tools/**'
     target: /query-index.json
     properties:
       title:
