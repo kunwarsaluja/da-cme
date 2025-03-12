@@ -20,8 +20,28 @@ indices:
         select: head > meta[property="og:image"]
         value: |
           match(attribute(el, 'content'), "https:\/\/[^/]+(/.*)")
+      locale:
+        select: head > meta[name="locale"]
+        value: |
+          attribute(el, 'content')    
       template:
         select: head > meta[name="template"]
+        value: |
+          attribute(el, 'content')
+      author:
+        select: head > meta[name="author"]
+        value: |
+          attribute(el, 'content')
+     tags:
+        select: head > meta[property="article:tag"]
+        values: |
+          attribute(el, 'content')
+      read-time:
+        select: head > meta[name="read-time"]
+        value: |
+          attribute(el, 'content')
+      primary-topics:
+        select: head > meta[name="primary-topics"]
         value: |
           attribute(el, 'content')
       lastModified:
