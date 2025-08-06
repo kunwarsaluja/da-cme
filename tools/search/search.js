@@ -785,7 +785,7 @@ function displayResults(filteredResults = null) {
     }).join('');
 
     const matchCount = result.matches.length;
-    const isExpanded = result.expanded !== false; // Default to expanded
+    const isExpanded = result.expanded === true; // Default to collapsed
 
     item.innerHTML = `
       <input type="checkbox" class="result-checkbox" data-index="${originalIndex}" ${result.selected ? 'checked' : ''}>
