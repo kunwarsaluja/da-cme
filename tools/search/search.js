@@ -31,7 +31,22 @@ const API = {
 };
 
 function parseOrgSite() {
-  // First priority: Try to get from DA context
+  // First priority: Check if user has entered something in the input (user override)
+  const orgSitePath = document.getElementById('org-site-path')?.value?.trim();
+  if (orgSitePath) {
+    // Parse /org/site format
+    const cleanPath = orgSitePath.startsWith('/') ? orgSitePath.slice(1) : orgSitePath;
+    const parts = cleanPath.split('/').filter((part) => part.length > 0);
+
+    if (parts.length >= 2) {
+      const result = { org: parts[0], site: parts[1] };
+      // Cache the user's valid input in memory
+      app.orgSiteCache = result;
+      return result;
+    }
+  }
+
+  // Second priority: Try to get from DA context (auto-populate if input is empty)
   const { context } = app;
   if (context && context.org && (context.site || context.repo)) {
     const result = {
@@ -48,21 +63,6 @@ function parseOrgSite() {
     // Cache the context values
     app.orgSiteCache = result;
     return result;
-  }
-
-  // Second priority: Check if user has entered something in the input
-  const orgSitePath = document.getElementById('org-site-path')?.value?.trim();
-  if (orgSitePath) {
-    // Parse /org/site format
-    const cleanPath = orgSitePath.startsWith('/') ? orgSitePath.slice(1) : orgSitePath;
-    const parts = cleanPath.split('/').filter((part) => part.length > 0);
-
-    if (parts.length >= 2) {
-      const result = { org: parts[0], site: parts[1] };
-      // Cache the user's valid input in memory
-      app.orgSiteCache = result;
-      return result;
-    }
   }
 
   // Third priority: Try to use cached value from previous valid input
@@ -1263,19 +1263,26 @@ async function exportResults() {
 
 async function loadFolderTree() {
   try {
-    const { context, token } = app;
-    if (!context || !token) {
+    const { token } = app;
+    if (!token) {
       return;
     }
+    
+    // Use user's org/site configuration instead of DA context
+    const orgSite = parseOrgSite();
+    if (!orgSite) {
+      return;
+    }
+    
     const folders = new Set();
-    const site = context.site || context.repo || 'da-cme';
-    const path = `/${context.org}/${site}`;
+    const { org, site } = orgSite;
+    const path = `/${org}/${site}`;
 
     const { results } = crawl({
       path,
       callback: (file) => {
         // Extract folder path from file path
-        const filePath = file.path.replace(`/${context.org}/${site}`, '');
+        const filePath = file.path.replace(`/${org}/${site}`, '');
         const folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
         if (folderPath && folderPath !== '/') {
           folders.add(folderPath);
@@ -1590,6 +1597,29 @@ function setupEventListeners() {
     });
   }
 
+  // Load folder tree on-demand when user focuses on base path field
+  const searchPathInput = document.getElementById('search-path');
+  if (searchPathInput) {
+    let folderTreeLoaded = false;
+    searchPathInput.addEventListener('focus', () => {
+      if (!folderTreeLoaded) {
+        folderTreeLoaded = true;
+        loadFolderTree().catch(() => {
+          // Silently fail, autocomplete just won't be available
+        });
+      }
+    });
+
+    // Also reload folder tree when org/site changes
+    const orgSiteInput = document.getElementById('org-site-path');
+    if (orgSiteInput) {
+      orgSiteInput.addEventListener('blur', () => {
+        // Reset flag so tree reloads with new org/site
+        folderTreeLoaded = false;
+      });
+    }
+  }
+
   if (toggleAll) {
     toggleAll.addEventListener('click', () => {
       const checkboxes = document.querySelectorAll('.result-checkbox');
@@ -1710,10 +1740,7 @@ async function init() {
       showMessage('Search & Replace app ready! Please configure your org/site.', 'success');
     }
 
-    // Load folder tree for base path selection (non-blocking)
-    loadFolderTree().catch(() => {
-      showMessage('Autocomplete not available', 'warning');
-    });
+    // Folder tree will be loaded on-demand when user focuses on base path field
   } catch (error) {
     showMessage('Failed to initialize app', 'error');
   }
