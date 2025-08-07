@@ -521,6 +521,7 @@ function searchInContent(content, searchTerm, replaceTerm = '') {
     .replace(/srcset="[^"]*"/gi, '')
     .replace(/data-src="[^"]*"/gi, '')
     .replace(/action="[^"]*"/gi, '')
+    .replace(/media="[^"]*"/gi, '')
     .replace(/url\([^)]*\)/gi, '')
     .replace(/https?:\/\/[^\s<>"']+/gi, '')
     .replace(/<a[^>]*>[^<]*<\/a>/gi, '')
@@ -644,7 +645,7 @@ async function scanFiles() {
           matches: result.matches,
           originalContent: content,
           updatedContent: result.updatedContent,
-          selected: false,
+          selected: true,
           foundElements: result.foundElements || false,
           elementCount: result.elementCount || 0,
         };
@@ -721,6 +722,9 @@ function displayResults(filteredResults = null) {
 
   list.innerHTML = '';
 
+  // Clear selected files set for fresh state
+  app.selectedFiles.clear();
+
   // Use filtered results if provided, otherwise use all results
   const resultsToShow = filteredResults || app.results;
 
@@ -757,7 +761,7 @@ function displayResults(filteredResults = null) {
     const replaceTerm = document.getElementById('replace-term')?.value || '';
     const searchTerm = document.getElementById('search-term')?.value || '';
 
-    const matchesHtml = result.matches.map((match) => {
+    const matchesHtml = result.matches.map((match, matchIndex) => {
       // Handle element-only searches differently
       if (result.foundElements && !searchTerm) {
         return `
@@ -791,7 +795,7 @@ function displayResults(filteredResults = null) {
       <input type="checkbox" class="result-checkbox" data-index="${originalIndex}" ${result.selected ? 'checked' : ''}>
       <div class="result-content">
         <div class="result-header" data-result-index="${originalIndex}">
-          <div class="result-path">${result.file.path}</div>
+                      <a href="https://da.live/edit#${result.file.path.replace('.html', '')}" target="_blank" class="result-path">${result.file.path}</a>
           <div class="result-meta">
             <span class="match-count">${matchCount} match${matchCount !== 1 ? 'es' : ''}</span>
             <div class="result-toggle">
@@ -812,6 +816,11 @@ function displayResults(filteredResults = null) {
       item.classList.add('expanded');
     }
 
+    // Initialize selectedFiles Set based on initial selection state
+    if (result.selected) {
+      app.selectedFiles.add(originalIndex);
+    }
+
     const checkbox = item.querySelector('.result-checkbox');
     checkbox.addEventListener('change', (e) => {
       const idx = parseInt(e.target.dataset.index, 10);
@@ -826,12 +835,15 @@ function displayResults(filteredResults = null) {
       updateActionButtons();
     });
 
-    // Add accordion toggle functionality
-    const resultHeader = item.querySelector('.result-header');
-    resultHeader.addEventListener('click', (e) => {
-      // Don't trigger if clicking on checkbox
-      if (e.target.closest('.result-checkbox')) return;
 
+
+    // Add accordion toggle functionality
+    const resultContent = item.querySelector('.result-content');
+    resultContent.addEventListener('click', (e) => {
+      // Don't trigger if clicking on checkbox or link
+      if (e.target.closest('.result-checkbox') || e.target.closest('a')) return;
+
+      const resultHeader = item.querySelector('.result-header');
       const idx = parseInt(resultHeader.dataset.resultIndex, 10);
       const matchesContainer = item.querySelector('.result-matches');
       const isCurrentlyExpanded = item.classList.contains('expanded');
@@ -1016,7 +1028,8 @@ async function executeReplace() {
       updateProgress((index / selected.length) * 100, `Updating ${result.file.path.split('/').pop()}...`);
 
       const replaceResult = searchInContent(result.originalContent, searchTerm, replaceTerm);
-      const success = await saveContent(result.file.path, replaceResult.updatedContent);
+      const updatedContent = replaceResult.updatedContent;
+      const success = await saveContent(result.file.path, updatedContent);
       return success;
     });
 
@@ -1475,6 +1488,7 @@ function updateBulkButtonText() {
     }
   }
 }
+
 
 function updateExportButtonText() {
   const buttonText = document.getElementById('export-btn-text');
