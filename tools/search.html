@@ -61,13 +61,17 @@
             
             <div class="card-content">
               
-              <!-- Base Path -->
+              <!-- Search Paths -->
               <div class="input-group">
-                <label for="search-path" class="input-label">
-                  <span class="label-text">Base Path</span>
-                  <span class="label-hint">Starting folder for search</span>
+                <label for="search-path-input" class="input-label">
+                  <span class="label-text">Search Paths</span>
                 </label>
-                <input type="text" id="search-path" class="input-field" placeholder="/blog" value="/">
+                <div class="multi-path-container">
+                  <input type="text" id="search-path-input" class="input-field path-input" placeholder="Type to search folders (e.g., /drafts, /fragments)">
+                  <div class="path-tags" id="path-tags">
+                    <!-- Path tags will be added here -->
+                  </div>
+                </div>
                 <div class="checkbox-option">
                   <label class="checkbox-item">
                     <input type="checkbox" id="include-subfolders">

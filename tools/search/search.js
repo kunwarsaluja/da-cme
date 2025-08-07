@@ -16,6 +16,7 @@ const app = {
   fileCache: new Map(),
   availablePaths: [],
   orgSiteCache: null, // Cache for org/site configuration
+  searchPaths: [], // Array to store multiple search paths
   pagination: {
     currentPage: 1,
     totalPages: 1,
@@ -23,12 +24,136 @@ const app = {
   },
 };
 
+// Global flag to prevent blur handler interference with autocomplete
+let isSelectingFromAutocomplete = false;
+
 const API = {
   LIST: 'https://admin.da.live/list',
   SOURCE: 'https://admin.da.live/source',
   PREVIEW: 'https://admin.hlx.page/preview',
   LIVE: 'https://admin.hlx.page/live',
 };
+
+// Multi-Path Management Functions
+function addSearchPath(path) {
+  if (!path || path.trim() === '') return false;
+
+  const normalizedPath = path.trim().startsWith('/') ? path.trim() : `/${path.trim()}`;
+
+  if (app.searchPaths.includes(normalizedPath)) {
+    showMessage(`Path "${normalizedPath}" is already added`, 'warning');
+    return false;
+  }
+
+  // Only allow valid paths from the backend API
+  if (app.availablePaths.length === 0) {
+    showMessage('Please wait for folder structure to load, then try again or use autocomplete.', 'warning');
+    return false;
+  }
+
+  const pathExists = app.availablePaths.some((availablePath) => (
+    availablePath === normalizedPath || availablePath.startsWith(`${normalizedPath}/`)
+  ));
+  if (!pathExists) {
+    showMessage(`Path "${normalizedPath}" does not exist in this site. Type to browse available paths or use autocomplete.`, 'error');
+    return false;
+  }
+
+  app.searchPaths.push(normalizedPath);
+  renderPathTags();
+  updatePathInfo();
+  return true;
+}
+
+function removeSearchPath(path) {
+  const index = app.searchPaths.indexOf(path);
+  if (index > -1) {
+    app.searchPaths.splice(index, 1);
+    renderPathTags();
+    updatePathInfo();
+  }
+}
+
+function renderPathTags() {
+  const container = document.getElementById('path-tags');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  app.searchPaths.forEach((path) => {
+    const tag = document.createElement('div');
+    tag.className = 'path-tag';
+    tag.setAttribute('data-path', path);
+
+    tag.innerHTML = `
+      <span class="tag-text">${path}</span>
+      <button type="button" class="tag-remove" aria-label="Remove path ${path}">
+        <img src="./search/icons/close.svg" alt="Remove" class="icon icon-sm">
+      </button>
+    `;
+
+    // Add remove functionality
+    const removeBtn = tag.querySelector('.tag-remove');
+    removeBtn.addEventListener('click', () => {
+      removeSearchPath(path);
+    });
+
+    container.appendChild(tag);
+  });
+}
+
+function updatePathInfo() {
+  const infoContainer = document.getElementById('path-info');
+  if (!infoContainer) return;
+
+  const includeSubfolders = document.getElementById('include-subfolders')?.checked || false;
+  const infoText = infoContainer.querySelector('.info-text');
+
+  if (app.searchPaths.length === 0) {
+    infoText.textContent = includeSubfolders
+      ? 'No paths selected - will search entire site including subfolders'
+      : 'No paths selected - will search entire site (root level only)';
+  } else {
+    const pathCount = app.searchPaths.length;
+    const subfolderText = includeSubfolders ? ' including subfolders' : '';
+    if (pathCount === 1) {
+      infoText.textContent = `Will search ${app.searchPaths[0]}${subfolderText}`;
+    } else {
+      infoText.textContent = `Will search ${pathCount} selected paths${subfolderText}`;
+    }
+  }
+}
+
+// Enhanced fetchFiles to handle multiple paths
+async function fetchAllFiles() {
+  const allFiles = [];
+
+  // If no paths selected, search entire site (equivalent to base path = '')
+  if (app.searchPaths.length === 0) {
+    return fetchFiles('');
+  }
+
+  const processedPaths = new Set();
+
+  await Promise.all(app.searchPaths.map(async (path) => {
+    if (processedPaths.has(path)) return;
+    processedPaths.add(path);
+
+    try {
+      const files = await fetchFiles(path);
+      // Filter out duplicates based on file path
+      files.forEach((file) => {
+        if (!allFiles.some((existing) => existing.path === file.path)) {
+          allFiles.push(file);
+        }
+      });
+    } catch (error) {
+      showMessage(`Error fetching files from ${path}: ${error.message}`, 'error');
+    }
+  }));
+
+  return allFiles;
+}
 
 function parseOrgSite() {
   // Check if user has entered something in the input
@@ -595,14 +720,20 @@ async function scanFiles() {
   }
 
   const replaceTerm = document.getElementById('replace-term')?.value || '';
-  const basePath = document.getElementById('search-path')?.value?.trim() || '';
 
   try {
-    const searchPath = basePath ? `in ${basePath}` : 'across entire site';
-    showMessage(`Scanning files ${searchPath}...`, 'info');
+    let pathsText;
+    if (app.searchPaths.length === 0) {
+      pathsText = 'entire site';
+    } else if (app.searchPaths.length === 1) {
+      [pathsText] = app.searchPaths;
+    } else {
+      pathsText = `${app.searchPaths.length} selected paths`;
+    }
+    showMessage(`Scanning files in ${pathsText}...`, 'info');
     updateProgress(10, 'Fetching file list...');
 
-    const files = await fetchFiles(basePath);
+    const files = await fetchAllFiles();
 
     if (files.length === 0) {
       showMessage('No HTML files found', 'error');
@@ -1346,7 +1477,8 @@ async function loadFolderTree() {
 }
 
 function setupPathAutocomplete() {
-  const pathInput = document.getElementById('search-path');
+  const pathInput = document.getElementById('search-path-input');
+  if (!pathInput) return; // Exit if input not found
   const pathContainer = pathInput.parentElement;
 
   // Create autocomplete container
@@ -1354,25 +1486,10 @@ function setupPathAutocomplete() {
   if (!autocompleteContainer) {
     autocompleteContainer = document.createElement('div');
     autocompleteContainer.id = 'autocomplete-container';
-    autocompleteContainer.style.position = 'relative';
-    autocompleteContainer.style.width = '100%';
 
     // Create suggestions list
     const suggestionsList = document.createElement('div');
     suggestionsList.id = 'suggestions-list';
-    suggestionsList.style.position = 'absolute';
-    suggestionsList.style.top = '100%';
-    suggestionsList.style.left = '0';
-    suggestionsList.style.right = '0';
-    suggestionsList.style.background = 'white';
-    suggestionsList.style.border = '1px solid #e5e5e7';
-    suggestionsList.style.borderTop = 'none';
-    suggestionsList.style.borderRadius = '0 0 8px 8px';
-    suggestionsList.style.maxHeight = '200px';
-    suggestionsList.style.overflowY = 'auto';
-    suggestionsList.style.zIndex = '1000';
-    suggestionsList.style.display = 'none';
-    suggestionsList.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
 
     // Wrap input in autocomplete container
     pathInput.parentNode.insertBefore(autocompleteContainer, pathInput);
@@ -1387,7 +1504,8 @@ function setupPathAutocomplete() {
   pathInput.placeholder = 'Type to search folders (e.g., /drafts, /fragments)';
 
   function showSuggestions(query) {
-    if (!app.availablePaths || query.length < 1) {
+    // Don't show suggestions if folder structure isn't loaded
+    if (!app.availablePaths || app.availablePaths.length === 0) {
       suggestionsList.style.display = 'none';
       return;
     }
@@ -1405,24 +1523,29 @@ function setupPathAutocomplete() {
     filtered.forEach((path, index) => {
       const item = document.createElement('div');
       item.className = 'suggestion-item';
-      item.style.padding = '8px 12px';
-      item.style.cursor = 'pointer';
-      item.style.borderBottom = index < filtered.length - 1 ? '1px solid #f0f0f0' : 'none';
       item.textContent = path;
 
       item.addEventListener('mouseenter', () => {
         // Remove previous selection
         suggestionsList.querySelectorAll('.suggestion-item').forEach((i) => {
-          i.style.background = '';
+          i.classList.remove('selected');
         });
-        item.style.background = '#f0f8ff';
+        item.classList.add('selected');
         selectedIndex = index;
       });
 
-      item.addEventListener('click', () => {
-        pathInput.value = path;
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        isSelectingFromAutocomplete = true;
+        if (addSearchPath(path)) {
+          pathInput.value = '';
+        }
         suggestionsList.style.display = 'none';
         pathInput.focus();
+        setTimeout(() => {
+          isSelectingFromAutocomplete = false;
+        }, 100);
       });
 
       suggestionsList.appendChild(item);
@@ -1437,16 +1560,14 @@ function setupPathAutocomplete() {
     }, 150);
   }
 
-  // Input event handler
+  // Input event handler - filter suggestions as user types
   pathInput.addEventListener('input', (e) => {
     showSuggestions(e.target.value);
   });
 
-  // Focus handler
+  // Focus handler - show suggestions based on current input
   pathInput.addEventListener('focus', () => {
-    if (pathInput.value) {
-      showSuggestions(pathInput.value);
-    }
+    showSuggestions(pathInput.value);
   });
 
   // Blur handler
@@ -1466,11 +1587,17 @@ function setupPathAutocomplete() {
       updateSelection(items);
     } else if (e.key === 'Enter' && selectedIndex >= 0) {
       e.preventDefault();
+      isSelectingFromAutocomplete = true;
       const selectedItem = items[selectedIndex];
       if (selectedItem) {
-        pathInput.value = selectedItem.textContent;
+        if (addSearchPath(selectedItem.textContent)) {
+          pathInput.value = '';
+        }
         suggestionsList.style.display = 'none';
       }
+      setTimeout(() => {
+        isSelectingFromAutocomplete = false;
+      }, 100);
     } else if (e.key === 'Escape') {
       suggestionsList.style.display = 'none';
       pathInput.blur();
@@ -1479,7 +1606,11 @@ function setupPathAutocomplete() {
 
   function updateSelection(items) {
     items.forEach((item, index) => {
-      item.style.background = index === selectedIndex ? '#f0f8ff' : '';
+      if (index === selectedIndex) {
+        item.classList.add('selected');
+      } else {
+        item.classList.remove('selected');
+      }
     });
   }
 }
@@ -1562,6 +1693,43 @@ function setupEventListeners() {
   // Set initial export button text
   updateExportButtonText();
 
+  // Multi-path input functionality with validation
+  const pathInput = document.getElementById('search-path-input');
+  if (pathInput) {
+    pathInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        // Check if autocomplete suggestions are visible
+        const suggestionsList = document.getElementById('suggestions-list');
+        const isAutocompleteActive = suggestionsList && suggestionsList.style.display !== 'none';
+
+        if (!isAutocompleteActive) {
+          e.preventDefault();
+          const path = pathInput.value.trim();
+          if (addSearchPath(path)) {
+            pathInput.value = '';
+          }
+        }
+      }
+    });
+
+    pathInput.addEventListener('blur', () => {
+      // Don't process blur if user is selecting from autocomplete
+      if (isSelectingFromAutocomplete) {
+        return;
+      }
+      const path = pathInput.value.trim();
+      if (path && addSearchPath(path)) {
+        pathInput.value = '';
+      }
+    });
+  }
+
+  // Include subfolders checkbox
+  const includeSubfoldersCheckbox = document.getElementById('include-subfolders');
+  if (includeSubfoldersCheckbox) {
+    includeSubfoldersCheckbox.addEventListener('change', updatePathInfo);
+  }
+
   // Filter results functionality
   const filterInput = document.getElementById('filter-results');
   if (filterInput) {
@@ -1625,7 +1793,7 @@ function setupEventListeners() {
   }
 
   // Load folder tree on-demand when user focuses on base path field
-  const searchPathInput = document.getElementById('search-path');
+  const searchPathInput = document.getElementById('search-path-input');
   if (searchPathInput) {
     let folderTreeLoaded = false;
     searchPathInput.addEventListener('focus', () => {
@@ -1785,6 +1953,10 @@ async function init() {
     app.actions = actions;
 
     setupEventListeners();
+
+    // Initialize path tags and info
+    renderPathTags();
+    updatePathInfo();
 
     // Show ready message
     showMessage('FindReplace Pro is ready! Enter your org/site to get started.', 'success');
