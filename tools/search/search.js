@@ -1655,15 +1655,22 @@ function toggleAccordion(contentId) {
 
   if (content && card) {
     const isExpanded = card.classList.contains('expanded');
+    const accordionIcon = card.querySelector('.accordion-icon');
 
     if (isExpanded) {
       // Collapse
       card.classList.remove('expanded');
       content.style.display = 'none';
+      if (accordionIcon) {
+        accordionIcon.src = '/tools/search/icons/chevron-down.svg';
+      }
     } else {
       // Expand
       card.classList.add('expanded');
       content.style.display = 'block';
+      if (accordionIcon) {
+        accordionIcon.src = '/tools/search/icons/chevron-up.svg';
+      }
     }
   }
 }

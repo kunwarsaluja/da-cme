@@ -646,7 +646,7 @@ input, textarea, select {
   display: flex;
   gap: var(--spacing-lg);
   margin-top: var(--spacing-md);
-  align-items: center;
+  align-items: flex-start;
 }
 
 .input-group .input-row .input-group {
@@ -661,6 +661,7 @@ input, textarea, select {
   height: 40px;
   font-size: var(--font-size-sm);
   margin: 0;
+  box-sizing: border-box;
 }
 
 /* Align all checkboxes at the same level as the search options row */
@@ -679,6 +680,8 @@ input, textarea, select {
   white-space: nowrap;
   height: 40px;
   padding: 0 var(--spacing-sm);
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 /* Search/Replace specific styling - prevent overflow */
@@ -754,16 +757,19 @@ input, textarea, select {
   height: 24px;
 }
 
+.accordion-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
 .accordion-icon {
   width: 20px;
   height: 20px;
-  transition: transform var(--transition-fast);
-  color: var(--color-text-secondary);
 }
 
-.accordion-card.expanded .accordion-icon {
-  transform: rotate(180deg);
-}
 
 .accordion-content {
   transition: opacity var(--transition-normal);
