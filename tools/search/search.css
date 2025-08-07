@@ -83,11 +83,11 @@ body {
   font-size: var(--font-size-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 /* App Container */
 .app-container {
-  min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
   background: var(--color-background);
@@ -168,8 +168,34 @@ body {
 
 /* Main Content */
 .app-main {
-  padding: var(--spacing-2xl) var(--spacing-lg);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
 }
+
+/* Configuration Container - Sidebar Layout */
+.config-container {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--spacing-lg);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: start;
+}
+
+.main-config-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.filters-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+
 
 /* Configuration Cards */
 .config-cards {
@@ -177,6 +203,18 @@ body {
   grid-template-columns: 1fr;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-2xl);
+}
+
+/* Responsive - Stack on mobile */
+@media (width <= 768px) {
+  .config-container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .filters-sidebar {
+    order: -1; /* Move filters to top on mobile */
+  }
 }
 
 .config-card {
@@ -237,6 +275,29 @@ body {
   margin-bottom: 0;
 }
 
+/* Main config specific styling */
+.main-config-section .config-card {
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-config-section .card-content {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  flex: 1;
+}
+
+/* Base Path section with subtle bottom border */
+.main-config-section .input-group:first-child {
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+
+
 .input-label {
   display: block;
   margin-bottom: var(--spacing-sm);
@@ -276,7 +337,10 @@ body {
   transition: var(--transition-fast);
   background: var(--color-background);
   resize: vertical;
-  min-height: 80px;
+  min-height: 90px;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .input-field:focus,
@@ -285,6 +349,10 @@ body {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.checkbox-option {
+  margin-top: var(--spacing-sm);
 }
 
 .input-help {
@@ -306,6 +374,87 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-lg);
+  position: relative;
+}
+
+/* Ensure proper sizing for search/replace grid */
+.search-replace-row.input-row {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+/* Search/Replace section styling */
+.search-replace-row {
+  padding: var(--spacing-md);
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-gray-100);
+  margin: 0;
+}
+
+
+
+/* Search/Replace divider - between main Search For and Replace With sections */
+.search-replace-row::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: var(--spacing-md);
+  bottom: var(--spacing-md);
+  width: 1px;
+  background: var(--color-gray-200);
+  z-index: 1;
+  transform: translateX(-50%);
+}
+
+/* Search options row - special styling for Search Type + Case Sensitive */
+.input-group .input-row {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+  align-items: center;
+}
+
+.input-group .input-row .input-group {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.input-group .input-row .input-group .select-field {
+  width: 100%;
+  min-width: 200px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  height: 40px;
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+/* Align all checkboxes at the same level as the search options row */
+.input-group > .checkbox-option {
+  margin-top: var(--spacing-md);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.input-group .input-row .checkbox-option {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  height: 40px;
+  padding: 0 var(--spacing-sm);
+}
+
+/* Search/Replace specific styling - prevent overflow */
+.search-replace-row.input-row .input-group {
+  margin-bottom: 0;
+  min-width: 0; /* Prevent grid items from overflowing */
+}
+
+.search-replace-row.input-row .textarea-field {
+  max-width: 100%;
 }
 
 /* Checkboxes */
@@ -383,8 +532,10 @@ body {
 }
 
 .accordion-content {
-  transition: all var(--transition-normal);
+  transition: opacity var(--transition-normal);
   overflow: hidden;
+  will-change: height;
+  padding: var(--spacing-lg);
 }
 
 .accordion-content.expanded {
@@ -409,7 +560,7 @@ body {
   align-items: center;
   gap: var(--spacing-lg);
   box-shadow: var(--shadow-sm);
-  margin-bottom: var(--spacing-2xl);
+  margin-top: var(--spacing-lg);
 }
 
 .primary-actions {
@@ -590,6 +741,10 @@ body {
   border-radius: var(--border-radius-xl);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+}
+
+.results-container .card-content {
+  padding: var(--spacing-lg);
 }
 
 .results-header {
@@ -1283,4 +1438,91 @@ body {
     --color-gray-50: #374151;
     --color-gray-100: #4b5563;
   }
+}
+
+/* Configuration Accordion */
+.config-accordion {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg);
+  overflow: hidden;
+}
+
+.config-accordion-header {
+  padding: var(--spacing-lg);
+  background: var(--color-gray-50);
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.config-accordion-header:hover {
+  background: var(--color-gray-100);
+}
+
+.accordion-header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.config-accordion-header .card-icon {
+  color: var(--color-primary);
+}
+
+.config-accordion-header h2 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.config-accordion .accordion-content {
+  padding: 0;
+}
+
+.config-accordion .config-container {
+  margin: 0;
+  max-width: none;
+  padding: var(--spacing-lg);
+}
+
+/* Advanced Filters Specific Styling */
+.filters-sidebar .accordion-content {
+  padding: 0;
+  margin-top: var(--spacing-sm);
+}
+
+.filters-sidebar .card-content .input-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.filters-sidebar .card-content .input-group:last-child {
+  margin-bottom: 0;
+}
+
+.filters-sidebar .card-content {
+  padding: var(--spacing-lg);
+}
+
+/* Better spacing for filter accordion header */
+.filters-sidebar .accordion-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-gray-50);
+  border-bottom: none;
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Improved filter input group spacing */
+.filters-sidebar .input-group .input-label {
+  margin-bottom: var(--spacing-xs);
+}
+
+.filters-sidebar .input-field {
+  margin-bottom: 0;
 }

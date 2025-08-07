@@ -38,8 +38,28 @@
       </header>
 
       <main class="app-main">
-        <!-- Configuration Cards -->
-        <div class="config-cards">
+        <!-- Configuration Accordion -->
+        <div class="config-accordion accordion-card expanded" id="config-accordion">
+          <div class="config-accordion-header accordion-header" data-accordion-target="config-content">
+            <div class="accordion-header-content">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <h2>Search Criteria</h2>
+            </div>
+            <div class="accordion-toggle">
+              <svg class="accordion-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 8.84L12 13.42l4.59-4.58L18 10.25l-6 6-6-6z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="accordion-content" id="config-content">
+            <div class="config-container">
+          <!-- Main Configuration -->
+          <div class="main-config-section">
           <!-- Search Configuration Card -->
           <div class="config-card">
             <div class="card-header">
@@ -48,36 +68,119 @@
                   <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                 </svg>
               </div>
-              <h2>Search Configuration</h2>
+              <h2>Search Criteria</h2>
+            </div>
+            
+            <div class="card-content">
+              
+              <!-- Base Path -->
+              <div class="input-group">
+                <label for="search-path" class="input-label">
+                  <span class="label-text">Base Path</span>
+                  <span class="label-hint">Starting folder for search</span>
+                </label>
+                <input type="text" id="search-path" class="input-field" placeholder="/blog" value="/">
+                <div class="checkbox-option">
+                  <label class="checkbox-item">
+                    <input type="checkbox" id="include-subfolders">
+                    <span class="checkbox-label">Include Subfolders</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Search & Replace Row -->
+              <div class="input-row search-replace-row">
+                <div class="input-group">
+                  <label for="search-term" class="input-label">
+                    <span class="label-text">Search For</span>
+                    <span class="label-hint">Text or pattern to find</span>
+                  </label>
+                  <textarea id="search-term" class="textarea-field" placeholder="Enter search term or regex pattern" rows="3"></textarea>
+                  <div class="input-row">
+                    <div class="input-group">
+                      <select id="search-type" class="select-field">
+                        <option value="contains">Contains (default)</option>
+                        <option value="exact">Exact Match</option>
+                        <option value="regex">Regular Expression</option>
+                      </select>
+                    </div>
+                    
+                    <div class="checkbox-option">
+                      <label class="checkbox-item">
+                        <input type="checkbox" id="case-sensitive">
+                        <span class="checkbox-label">Case Sensitive</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div id="search-term-help" class="input-help" style="display: none;">
+                    <strong>Optional:</strong> Enter text to find within elements, or leave empty to find all pages containing the selected elements
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <label for="replace-term" class="input-label">
+                    <span class="label-text">Replace With</span>
+                    <span class="label-hint">Replacement text (optional for search-only)</span>
+                  </label>
+                  <textarea id="replace-term" class="textarea-field" placeholder="Enter replacement text (use $1, $2 for regex groups when using Regular Expression)" rows="3"></textarea>
+                  <div class="checkbox-option">
+                    <label class="checkbox-item">
+                      <input type="checkbox" id="replace-empty">
+                      <span class="checkbox-label">Replace with empty (remove text)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="filters-sidebar">
+          
+          <!-- Configuration Card -->
+          <div class="config-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <h2>Configuration</h2>
             </div>
             
             <div class="card-content">
               <div class="input-group">
                 <label for="org-site-path" class="input-label">
                   <span class="label-text">Organization/Site</span>
-                  <span class="label-hint">Your DA org and site (format: /org/site)</span>
                 </label>
-                <input type="text" id="org-site-path" class="input-field" placeholder="/kunwarsaluja/da-cme" value="">
-                <div class="input-help">
-                  <strong>Examples:</strong> 
-                  <code>/kunwarsaluja/da-cme</code>, 
-                  <code>/cmegroup/www</code>, 
-                  <code>/myorg/mysite</code>
-                </div>
+                <input type="text" id="org-site-path" class="input-field" placeholder="/org/mysite" value="">
               </div>
-
-              <div class="input-group">
-                <label for="search-path" class="input-label">
-                  <span class="label-text">Base Path</span>
-                  <span class="label-hint">Where to search within the site (empty for entire site)</span>
-                </label>
-                <input type="text" id="search-path" class="input-field" placeholder="/content/path" value="">
+            </div>
+          </div>
+          
+          <!-- Advanced Filters Accordion -->
+          <div class="config-card accordion-card">
+            <div class="card-header accordion-header" data-accordion-target="file-filters">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                </svg>
               </div>
-
+              <div class="header-text">
+                <h2>Advanced Filters</h2>
+              </div>
+              <div class="accordion-toggle">
+                <svg class="accordion-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7.41 8.84L12 13.42l4.59-4.58L18 10.25l-6 6-6-6z"/>
+                </svg>
+              </div>
+            </div>
+            
+            <div class="card-content accordion-content" id="file-filters" style="display: none;">
               <div class="input-group">
                 <label for="target-type" class="input-label">
                   <span class="label-text">Target Content</span>
-                  <span class="label-hint">What type of content to search</span>
                 </label>
                 <select id="target-type" class="select-field">
                   <option value="all">All Content</option>
@@ -103,93 +206,22 @@
                 </div>
               </div>
 
-              <div class="input-row">
-                <div class="input-group">
-                  <label for="search-type" class="input-label">
-                    <span class="label-text">Search Type</span>
-                  </label>
-                  <select id="search-type" class="select-field">
-                    <option value="contains">Contains (default)</option>
-                    <option value="exact">Exact Match</option>
-                    <option value="regex">Regular Expression</option>
-                  </select>
-                </div>
-                
-                <div class="input-group checkbox-group">
-                  <span class="input-label">
-                    <span class="label-text">Options</span>
-                  </span>
-                  <div class="checkbox-list">
-                    <label class="checkbox-item">
-                      <input type="checkbox" id="case-sensitive">
-                      <span class="checkbox-label">Case Sensitive</span>
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" id="include-subfolders">
-                      <span class="checkbox-label">Include Subfolders</span>
-                    </label>
-                  </div>
-                </div>
+              <div class="input-group">
+                <label for="exclude-paths" class="input-label">
+                  <span class="label-text">Exclude Paths</span>
+                </label>
+                <input type="text" id="exclude-paths" class="input-field" placeholder="/drafts, /archive">
               </div>
 
               <div class="input-group">
-                <label for="search-term" class="input-label">
-                  <span class="label-text">Search For</span>
-                  <span class="label-hint">Text or pattern to find</span>
+                <label for="modified-since" class="input-label">
+                  <span class="label-text">Modified Since</span>
                 </label>
-                <textarea id="search-term" class="textarea-field" placeholder="Enter search term or regex pattern" rows="3"></textarea>
-                <div id="search-term-help" class="input-help" style="display: none;">
-                  <strong>Optional:</strong> Enter text to find within elements, or leave empty to find all pages containing the selected elements
-                </div>
-              </div>
-
-              <div class="input-group">
-                <label for="replace-term" class="input-label">
-                  <span class="label-text">Replace With</span>
-                  <span class="label-hint">Replacement text (optional for search-only)</span>
-                </label>
-                <textarea id="replace-term" class="textarea-field" placeholder="Enter replacement text (use $1, $2 for regex groups when using Regular Expression)" rows="3"></textarea>
+                <input type="date" id="modified-since" class="input-field">
               </div>
             </div>
           </div>
-
-          <!-- File Filters Accordion -->
-          <div class="config-card accordion-card">
-            <div class="card-header accordion-header" data-accordion-target="file-filters">
-              <div class="card-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
-                </svg>
-              </div>
-              <div class="header-text">
-                <h2>Advanced File Filters</h2>
-                <small class="accordion-hint">Click to expand additional filtering options</small>
-              </div>
-              <div class="accordion-toggle">
-                <svg class="accordion-icon" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M7.41 8.84L12 13.42l4.59-4.58L18 10.25l-6 6-6-6z"/>
-                </svg>
-              </div>
-            </div>
-            
-            <div class="card-content accordion-content" id="file-filters" style="display: none;">
-              <div class="input-row">
-                <div class="input-group">
-                  <label for="exclude-paths" class="input-label">
-                    <span class="label-text">Exclude Paths</span>
-                    <span class="label-hint">Comma-separated paths to skip (e.g., /drafts, /archive)</span>
-                  </label>
-                  <input type="text" id="exclude-paths" class="input-field" placeholder="/drafts, /archive, /templates">
-                </div>
-
-                <div class="input-group">
-                  <label for="modified-since" class="input-label">
-                    <span class="label-text">Modified Since</span>
-                    <span class="label-hint">Only search files modified after this date</span>
-                  </label>
-                  <input type="date" id="modified-since" class="input-field">
-                </div>
-              </div>
+          </div>
             </div>
           </div>
         </div>
@@ -260,9 +292,14 @@
         </div>
 
         <!-- Results Section -->
-        <div class="results-container" style="display: none;">
-          <div class="results-header">
-            <div class="results-title">
+        <div class="results-container accordion-card" style="display: none;">
+          <div class="card-header accordion-header" data-accordion-target="search-results">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
+            </div>
+            <div class="header-text">
               <h2>Search Results</h2>
               <div class="results-summary">
                 <div class="summary-item">
@@ -279,7 +316,14 @@
                 </div>
               </div>
             </div>
-            
+            <div class="accordion-toggle">
+              <svg class="accordion-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 8.84L12 13.42l4.59-4.58L18 10.25l-6 6-6-6z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="card-content accordion-content" id="search-results" style="display: none;">
             <div class="results-controls">
               <div class="selection-controls">
                 <button id="toggle-all" class="btn btn-sm btn-outline">Select All</button>
@@ -296,36 +340,36 @@
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="results-content">
-            <div class="results-list" id="results-list">
-              <!-- Results will be populated here -->
-            </div>
             
-            <!-- Pagination Controls -->
-            <div class="pagination-container" id="pagination-container" style="display: none;">
-              <div class="pagination-info">
-                <span id="pagination-info-text">Showing 1-10 of 25 results</span>
+            <div class="results-content">
+              <div class="results-list" id="results-list">
+                <!-- Results will be populated here -->
               </div>
-              <div class="pagination-controls">
-                <button id="prev-page" class="pagination-btn" disabled>
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                  </svg>
-                  Previous
-                </button>
-                
-                <div class="page-numbers" id="page-numbers">
-                  <!-- Page numbers will be populated here -->
+              
+              <!-- Pagination Controls -->
+              <div class="pagination-container" id="pagination-container" style="display: none;">
+                <div class="pagination-info">
+                  <span id="pagination-info-text">Showing 1-10 of 25 results</span>
                 </div>
-                
-                <button id="next-page" class="pagination-btn">
-                  Next
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
-                  </svg>
-                </button>
+                <div class="pagination-controls">
+                  <button id="prev-page" class="pagination-btn" disabled>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                    Previous
+                  </button>
+                  
+                  <div class="page-numbers" id="page-numbers">
+                    <!-- Page numbers will be populated here -->
+                  </div>
+                  
+                  <button id="next-page" class="pagination-btn">
+                    Next
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -31,7 +31,7 @@ const API = {
 };
 
 function parseOrgSite() {
-  // First priority: Check if user has entered something in the input (user override)
+  // Check if user has entered something in the input
   const orgSitePath = document.getElementById('org-site-path')?.value?.trim();
   if (orgSitePath) {
     // Parse /org/site format
@@ -46,26 +46,7 @@ function parseOrgSite() {
     }
   }
 
-  // Second priority: Try to get from DA context (auto-populate if input is empty)
-  const { context } = app;
-  if (context && context.org && (context.site || context.repo)) {
-    const result = {
-      org: context.org,
-      site: context.site || context.repo,
-    };
-
-    // Auto-populate the input field if it's empty
-    const input = document.getElementById('org-site-path');
-    if (input && !input.value.trim()) {
-      input.value = `/${result.org}/${result.site}`;
-    }
-
-    // Cache the context values
-    app.orgSiteCache = result;
-    return result;
-  }
-
-  // Third priority: Try to use cached value from previous valid input
+  // Fallback to cached value from previous valid input
   if (app.orgSiteCache) {
     return app.orgSiteCache;
   }
@@ -667,7 +648,28 @@ async function scanFiles() {
     document.getElementById('files-affected').textContent = app.results.length;
 
     displayResults();
-    document.querySelector('.results-container').style.display = 'block';
+
+    // Show results container and auto-expand accordion
+    const resultsContainer = document.querySelector('.results-container');
+    resultsContainer.style.display = 'block';
+
+    // Auto-expand the results accordion
+    const resultsAccordion = document.getElementById('search-results');
+    if (resultsAccordion) {
+      resultsAccordion.style.display = 'block';
+      const accordionCard = resultsAccordion.closest('.accordion-card');
+      if (accordionCard) {
+        accordionCard.classList.add('expanded');
+      }
+    }
+
+    // Auto-collapse config accordion when results appear
+    const configAccordion = document.getElementById('config-accordion');
+    const configContent = document.getElementById('config-content');
+    if (configAccordion && configContent && app.results.length > 0) {
+      configAccordion.classList.remove('expanded');
+      configContent.style.display = 'none';
+    }
 
     const executeBtn = document.getElementById('execute-btn');
     const exportBtn = document.getElementById('export-btn');
@@ -834,8 +836,6 @@ function displayResults(filteredResults = null) {
 
       updateActionButtons();
     });
-
-
 
     // Add accordion toggle functionality
     const resultContent = item.querySelector('.result-content');
@@ -1009,15 +1009,28 @@ async function executeReplace() {
   }
 
   const searchTerm = document.getElementById('search-term')?.value?.trim();
-  const replaceTerm = document.getElementById('replace-term')?.value?.trim();
+  const replaceEmptyChecked = document.getElementById('replace-empty')?.checked || false;
+  let replaceTerm = document.getElementById('replace-term')?.value?.trim() || '';
 
-  if (!searchTerm || !replaceTerm) {
-    showMessage('Both search and replace terms are required', 'error');
+  // If replace with empty is checked, use non-breaking space to maintain HTML structure
+  if (replaceEmptyChecked) {
+    replaceTerm = '&nbsp;';
+  }
+
+  if (!searchTerm) {
+    showMessage('Search term is required', 'error');
     return;
   }
 
+  // For non-empty replacement, require replace term unless empty checkbox is checked
+  if (!replaceEmptyChecked && !replaceTerm) {
+    showMessage('Replace term is required (or check "Replace with empty" to remove text)', 'error');
+    return;
+  }
+
+  const replaceText = replaceEmptyChecked ? '(remove text)' : `"${replaceTerm}"`;
   // eslint-disable-next-line no-alert
-  if (!confirm(`Replace "${searchTerm}" with "${replaceTerm}" in ${selected.length} files? This cannot be undone.`)) {
+  if (!confirm(`Replace "${searchTerm}" with ${replaceText} in ${selected.length} files? This cannot be undone.`)) {
     return;
   }
 
@@ -1028,7 +1041,7 @@ async function executeReplace() {
       updateProgress((index / selected.length) * 100, `Updating ${result.file.path.split('/').pop()}...`);
 
       const replaceResult = searchInContent(result.originalContent, searchTerm, replaceTerm);
-      const updatedContent = replaceResult.updatedContent;
+      const { updatedContent } = replaceResult;
       const success = await saveContent(result.file.path, updatedContent);
       return success;
     });
@@ -1280,13 +1293,13 @@ async function loadFolderTree() {
     if (!token) {
       return;
     }
-    
+
     // Use user's org/site configuration instead of DA context
     const orgSite = parseOrgSite();
     if (!orgSite) {
       return;
     }
-    
+
     const folders = new Set();
     const { org, site } = orgSite;
     const path = `/${org}/${site}`;
@@ -1488,7 +1501,6 @@ function updateBulkButtonText() {
     }
   }
 }
-
 
 function updateExportButtonText() {
   const buttonText = document.getElementById('export-btn-text');
@@ -1734,6 +1746,33 @@ function setupEventListeners() {
       document.getElementById('toast').classList.add('hidden');
     });
   }
+
+  // Replace with empty checkbox functionality
+  const replaceEmptyCheckbox = document.getElementById('replace-empty');
+  const replaceTermTextarea = document.getElementById('replace-term');
+
+  if (replaceEmptyCheckbox && replaceTermTextarea) {
+    // When checkbox is checked, disable textarea
+    replaceEmptyCheckbox.addEventListener('change', () => {
+      if (replaceEmptyCheckbox.checked) {
+        replaceTermTextarea.disabled = true;
+        replaceTermTextarea.value = '';
+        replaceTermTextarea.placeholder = 'Text will be removed (replaced with empty)';
+      } else {
+        replaceTermTextarea.disabled = false;
+        replaceTermTextarea.placeholder = 'Enter replacement text (use $1, $2 for regex groups when using Regular Expression)';
+      }
+    });
+
+    // When user types in textarea, uncheck the checkbox
+    replaceTermTextarea.addEventListener('input', () => {
+      if (replaceEmptyCheckbox.checked && replaceTermTextarea.value.length > 0) {
+        replaceEmptyCheckbox.checked = false;
+        replaceTermTextarea.disabled = false;
+        replaceTermTextarea.placeholder = 'Enter replacement text (use $1, $2 for regex groups when using Regular Expression)';
+      }
+    });
+  }
 }
 
 async function init() {
@@ -1746,13 +1785,8 @@ async function init() {
 
     setupEventListeners();
 
-    // Initialize org/site from DA context or show ready message
-    const orgSite = parseOrgSite();
-    if (orgSite) {
-      showMessage(`Search & Replace app ready! Using ${orgSite.org}/${orgSite.site}`, 'success');
-    } else {
-      showMessage('Search & Replace app ready! Please configure your org/site.', 'success');
-    }
+    // Show ready message
+    showMessage('FindReplace Pro is ready! Enter your org/site to get started.', 'success');
 
     // Folder tree will be loaded on-demand when user focuses on base path field
   } catch (error) {
