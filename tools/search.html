@@ -4,8 +4,7 @@
     <title>FindReplace Pro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content="Professional bulk find & replace tool with publishing workflow for content teams and authors">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23007aff'><path d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/></svg>">
-    <link rel="stylesheet" href="./search/search.css">
+    <link rel="stylesheet" href="/tools/search/search.css">
     <!-- Import DA App SDK -->
     <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
     <!-- Project App Logic -->
@@ -43,9 +42,7 @@
               <h2>Search Criteria</h2>
             </div>
             <div class="accordion-toggle">
-              <svg class="accordion-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7.41 8.84L12 13.42l4.59-4.58L18 10.25l-6 6-6-6z"/>
-              </svg>
+              <img src="./search/icons/chevron-down.svg" alt="Toggle" class="icon accordion-icon">
             </div>
           </div>
           
@@ -215,26 +212,19 @@
         <div class="action-bar">
           <div class="primary-actions">
             <button id="scan-btn" class="btn btn-primary">
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-              </svg>
-              <span>Scan & Preview</span>
+              <img src="./search/icons/search.svg" alt="Scan" class="icon btn-icon">
+              <span>Find</span>
             </button>
           </div>
           
           <div class="secondary-actions">
             <button id="execute-btn" class="btn btn-secondary" disabled>
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <span>Execute Replace</span>
+              <img src="./search/icons/check-circle.svg" alt="Execute" class="icon btn-icon">
+              <span>Replace</span>
             </button>
             
             <button id="export-btn" class="btn btn-outline" disabled>
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                <path d="M14 2v6h6"/>
-              </svg>
+              <img src="./search/icons/download.svg" alt="Export" class="icon btn-icon">
               <span id="export-btn-text">Export Files</span>
             </button>
             
@@ -245,12 +235,7 @@
                 <option value="unpublish">Unpublish</option>
               </select>
               <button id="bulk-publish-btn" class="btn btn-success" disabled>
-                <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M4.5 3h15l-2 7h-11l-2-7z"/>
-                  <path d="M14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
-                  <path d="M9 7l1 9"/>
-                  <path d="M20 7l-1 9"/>
-                </svg>
+                <img src="./search/icons/check-circle.svg" alt="Bulk Operation" class="icon btn-icon">
                 <span id="bulk-btn-text">Preview Selected</span>
               </button>
             </div>
@@ -298,9 +283,7 @@
               </div>
             </div>
             <div class="accordion-toggle">
-              <svg class="accordion-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7.41 8.84L12 13.42l4.59-4.58L18 10.25l-6 6-6-6z"/>
-              </svg>
+              <img src="./search/icons/chevron-down.svg" alt="Toggle Results" class="icon accordion-icon">
             </div>
           </div>
           
@@ -314,9 +297,7 @@
               </div>
               <div class="filter-controls">
                 <div class="search-input">
-                  <svg class="search-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                  </svg>
+                  <img src="./search/icons/search.svg" alt="Search" class="icon search-icon">
                   <input type="text" id="filter-results" placeholder="Filter by file path or content..." class="filter-input">
                 </div>
               </div>
