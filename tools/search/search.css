@@ -1734,6 +1734,11 @@ input, textarea, select {
   margin-bottom: var(--spacing-lg);
 }
 
+/* Tighter spacing for checkbox input groups that follow text inputs */
+.filters-sidebar .input-group:has(.checkbox-option) {
+  margin-top: calc(var(--spacing-md) * -1.5);
+}
+
 .filters-sidebar .card-content .input-group:last-child {
   margin-bottom: 0;
 }
