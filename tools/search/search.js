@@ -1,4 +1,10 @@
 /* eslint-disable import/no-unresolved, no-restricted-globals, no-use-before-define, no-await-in-loop, no-plusplus, consistent-return, max-len, no-shadow, default-case, no-unused-vars, no-console */
+
+/**
+ * FindReplace Pro - Advanced Search & Replace Tool for DA Platform
+ * Features: Text/Regex/HTML search, bulk operations, multi-path support
+ */
+
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 import { crawl } from 'https://da.live/nx/public/utils/tree.js';
 
@@ -603,6 +609,59 @@ function searchForElements(content, selector) {
   }
 }
 
+// HTML Mode: Search and replace entire HTML blocks - work directly with raw content
+function searchAndReplaceHTML(content, searchTerm, replaceTerm = '', caseSensitive = false) {
+  if (!searchTerm) return { matches: [], updatedContent: content };
+
+  // Work directly with raw content - no formatting or normalization
+  const searchContent = content;
+  const cleanSearchTerm = searchTerm.trim();
+
+  // Create search flags
+  const flags = caseSensitive ? 'g' : 'gi';
+
+  // Escape special regex characters in the search term for literal matching
+  const escapedSearchTerm = cleanSearchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(escapedSearchTerm, flags);
+
+  const matches = [];
+  const lineMatchCounts = {};
+  let match = regex.exec(searchContent);
+
+  while (match !== null) {
+    // For display purposes, calculate line numbers from formatted content
+    const formattedContent = formatHTML(searchContent);
+    const lineNum = formattedContent.substring(0, match.index).split('\n').length;
+
+    // Track the sequence of this match on its line
+    if (!lineMatchCounts[lineNum]) {
+      lineMatchCounts[lineNum] = 0;
+    }
+    lineMatchCounts[lineNum]++;
+
+    matches.push({
+      match: match[0],
+      index: match.index,
+      line: lineNum,
+      context: getMatchContext(searchContent, match.index, 150), // Context from raw content
+      sequenceOnLine: lineMatchCounts[lineNum],
+    });
+    match = regex.exec(searchContent);
+  }
+
+  let updatedContent = content;
+  if (replaceTerm !== undefined && matches.length > 0) {
+    // Direct replacement on original content
+    const replacementRegex = new RegExp(escapedSearchTerm, flags);
+    updatedContent = content.replace(replacementRegex, replaceTerm);
+  }
+
+  return {
+    matches,
+    updatedContent,
+  };
+}
+
 function searchInContent(content, searchTerm, replaceTerm = '') {
   const targetType = document.getElementById('target-type')?.value || 'all';
   const customSelector = document.getElementById('custom-selector')?.value?.trim();
@@ -647,6 +706,13 @@ function searchInContent(content, searchTerm, replaceTerm = '') {
   // Get search options
   const searchType = document.getElementById('search-type')?.value || 'contains';
   const caseSensitive = document.getElementById('case-sensitive')?.checked || false;
+  const htmlMode = document.getElementById('html-mode')?.checked || false;
+
+  // HTML Mode: Search and replace entire HTML blocks
+  if (htmlMode) {
+    return searchAndReplaceHTML(content, searchTerm, replaceTerm, caseSensitive);
+  }
+
   const regex = createSearchRegex(searchTerm, searchType, caseSensitive);
 
   const matches = [];
@@ -1777,6 +1843,34 @@ function setupEventListeners() {
     includeSubfoldersCheckbox.addEventListener('change', updatePathInfo);
   }
 
+  // HTML mode functionality
+  const htmlModeCheckbox = document.getElementById('html-mode');
+  const htmlModeHelp = document.getElementById('html-mode-help');
+  const searchTermTextarea = document.getElementById('search-term');
+  const replaceTermTextarea = document.getElementById('replace-term');
+
+  if (htmlModeCheckbox && htmlModeHelp) {
+    htmlModeCheckbox.addEventListener('change', () => {
+      if (htmlModeCheckbox.checked) {
+        htmlModeHelp.style.display = 'block';
+        if (searchTermTextarea) {
+          searchTermTextarea.placeholder = 'Enter HTML to find (e.g., <div class="hero">...</div>)';
+        }
+        if (replaceTermTextarea) {
+          replaceTermTextarea.placeholder = 'Enter replacement HTML (or leave empty to remove)';
+        }
+      } else {
+        htmlModeHelp.style.display = 'none';
+        if (searchTermTextarea) {
+          searchTermTextarea.placeholder = 'Enter search term or regex pattern';
+        }
+        if (replaceTermTextarea) {
+          replaceTermTextarea.placeholder = 'Enter replacement text (use $1, $2 for regex groups when using Regular Expression)';
+        }
+      }
+    });
+  }
+
   // Filter results functionality
   const filterInput = document.getElementById('filter-results');
   if (filterInput) {
@@ -1965,7 +2059,6 @@ function setupEventListeners() {
 
   // Replace with empty checkbox functionality
   const replaceEmptyCheckbox = document.getElementById('replace-empty');
-  const replaceTermTextarea = document.getElementById('replace-term');
 
   if (replaceEmptyCheckbox && replaceTermTextarea) {
     // When checkbox is checked, disable textarea

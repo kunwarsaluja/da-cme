@@ -644,9 +644,9 @@ input, textarea, select {
 /* Search options row - special styling for Search Type + Case Sensitive */
 .input-group .input-row {
   display: flex;
-  gap: var(--spacing-lg);
+  gap: calc(var(--spacing-lg) * 1.5);
   margin-top: var(--spacing-md);
-  align-items: flex-start;
+  align-items: center;
 }
 
 .input-group .input-row .input-group {
@@ -673,6 +673,27 @@ input, textarea, select {
   padding: 0;
 }
 
+/* Checkbox group for vertically stacked checkboxes */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  justify-content: center;
+  align-self: end;
+}
+
+/* Checkbox options inside checkbox group - vertically stacked */
+.checkbox-group .checkbox-option {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  height: auto;
+  padding: var(--spacing-xs) 0;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
 .input-group .input-row .checkbox-option {
   margin: 0;
   display: flex;
@@ -682,6 +703,7 @@ input, textarea, select {
   padding: 0 var(--spacing-sm);
   box-sizing: border-box;
   flex-shrink: 0;
+  vertical-align: middle;
 }
 
 /* Search/Replace specific styling - prevent overflow */
@@ -695,9 +717,6 @@ input, textarea, select {
 }
 
 /* Checkboxes */
-.checkbox-group {
-  align-self: end;
-}
 
 .checkbox-list {
   display: flex;

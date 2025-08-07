@@ -8,7 +8,7 @@
     <!-- Import DA App SDK -->
     <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
     <!-- Project App Logic -->
-    <script src="./search/search.js" type="module"></script>
+    <script src="/tools/search/search.js" type="module"></script>
   </head>
   <body>
     <div class="app-container">
@@ -97,15 +97,31 @@
                       </select>
                     </div>
                     
-                    <div class="checkbox-option">
-                      <label class="checkbox-item">
-                        <input type="checkbox" id="case-sensitive">
-                        <span class="checkbox-label">Case Sensitive</span>
-                      </label>
+                    <div class="checkbox-group">
+                      <div class="checkbox-option">
+                        <label class="checkbox-item">
+                          <input type="checkbox" id="case-sensitive">
+                          <span class="checkbox-label">Case Sensitive</span>
+                        </label>
+                      </div>
+                      
+                      <div class="checkbox-option">
+                        <label class="checkbox-item">
+                          <input type="checkbox" id="html-mode">
+                          <span class="checkbox-label">HTML Mode</span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                   <div id="search-term-help" class="input-help" style="display: none;">
                     <strong>Optional:</strong> Enter text to find within elements, or leave empty to find all pages containing the selected elements
+                  </div>
+                  <div id="html-mode-help" class="input-help" style="display: none;">
+                    <strong>HTML Mode:</strong> Search and replace entire HTML blocks with normalized formatting.
+                    <br><strong>Examples:</strong>
+                    <br>• Find: <code>&lt;div class="hero"&gt;&lt;/div&gt;</code>
+                    <br>• Replace: <code>&lt;div class="banner"&gt;&lt;/div&gt;</code>
+                    <br>• Remove blocks by leaving replacement empty
                   </div>
                 </div>
 
