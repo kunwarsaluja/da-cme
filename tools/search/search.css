@@ -101,12 +101,73 @@ input, textarea, select {
   color: var(--color-text-primary);
 }
 
-/* Icon Styling */
+/* Icon Styling with Theme Support */
+:root {
+  --icon-filter-light: brightness(0) saturate(100%) invert(0%);
+  --icon-filter-dark: brightness(0) saturate(100%) invert(100%);
+  --icon-filter-red: brightness(0) saturate(100%) invert(17%) sepia(100%) saturate(7395%) hue-rotate(2deg) brightness(97%) contrast(115%);
+  --icon-filter-orange: brightness(0) saturate(100%) invert(58%) sepia(96%) saturate(1017%) hue-rotate(6deg) brightness(101%) contrast(107%);
+}
+
 .icon {
   width: 20px;
   height: 20px;
   display: block;
-  filter: currentcolor;
+  filter: var(--icon-filter-light);
+  transition: filter 0.2s ease;
+}
+
+/* Dark theme adaptation */
+@media (prefers-color-scheme: dark) {
+  .icon {
+    filter: var(--icon-filter-dark);
+  }
+}
+
+/* Context-specific icon colors */
+.app-header .icon,
+.btn-primary .icon,
+.btn-success .icon {
+  filter: var(--icon-filter-dark); /* Always white in colored backgrounds */
+}
+
+.btn-outline .icon,
+.modal-content .icon {
+  filter: var(--icon-filter-light); /* Always dark in light backgrounds */
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-outline .icon,
+  .modal-content .icon {
+    filter: var(--icon-filter-dark); /* White in dark mode */
+  }
+}
+
+/* Red/Danger Icons */
+.icon-red,
+.btn-danger .icon,
+.toast.error .icon,
+.error .icon {
+  filter: var(--icon-filter-red) !important;
+}
+
+/* Warning/Orange Icons */
+.icon-warning,
+.btn-warning .icon,
+.toast.warning .icon,
+.warning .icon {
+  filter: var(--icon-filter-orange) !important;
+}
+
+/* Specific action icons */
+.clear-selection .icon,
+.modal-close .icon,
+.toast-close .icon {
+  filter: var(--icon-filter-red);
+}
+
+.help-btn .icon {
+  filter: var(--icon-filter-orange);
 }
 
 .icon-sm {
