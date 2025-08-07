@@ -86,6 +86,39 @@ body {
   min-height: 100vh;
 }
 
+/* Ensure all text elements inherit proper colors in dark mode */
+h1, h2, h3, h4, h5, h6,
+p, span, div, label,
+input, textarea, select {
+  color: inherit;
+}
+
+/* Force text color inheritance on main containers */
+.app-main,
+.config-container,
+.filters-sidebar,
+.results-container {
+  color: var(--color-text-primary);
+}
+
+/* Icon Styling */
+.icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: currentcolor;
+}
+
+.icon-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.icon-lg {
+  width: 24px;
+  height: 24px;
+}
+
 /* App Container */
 .app-container {
   max-width: 1200px;

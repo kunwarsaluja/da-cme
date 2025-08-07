@@ -67,22 +67,23 @@ function validateOrgSite() {
 function showMessage(text, type = 'info') {
   const toast = document.getElementById('toast');
   const message = document.querySelector('.toast-message');
-  const icon = document.querySelector('.toast-icon svg');
+  const iconImg = document.querySelector('.toast-icon img');
 
-  if (!toast || !message || !icon) return;
+  if (!toast || !message || !iconImg) return;
 
   // Update message
   message.textContent = text;
 
   // Update icon based on type
-  const icons = {
-    success: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
-    error: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z',
-    warning: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',
-    info: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z',
+  const iconPaths = {
+    success: './search/icons/check.svg',
+    error: './search/icons/close.svg',
+    warning: './search/icons/close.svg', // Could add a warning icon if needed
+    info: './search/icons/check.svg',
   };
 
-  icon.innerHTML = `<path d="${icons[type] || icons.info}"/>`;
+  iconImg.src = iconPaths[type] || iconPaths.info;
+  iconImg.alt = type.charAt(0).toUpperCase() + type.slice(1);
 
   // Update toast classes
   toast.className = `toast ${type}`;
