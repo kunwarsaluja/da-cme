@@ -365,7 +365,7 @@ async function saveContent(path, content) {
   }
 }
 
-function getMatchContext(content, index, contextLength = 50) {
+function getMatchContext(content, index, contextLength = 75) {
   const start = Math.max(0, index - contextLength);
   const end = Math.min(content.length, index + contextLength);
   return content.substring(start, end);
@@ -614,25 +614,33 @@ function searchInContent(content, searchTerm, replaceTerm = '') {
 
   if (!searchTerm) return { matches: [], updatedContent: content };
 
-  let contentForSearch = content;
+  // Format HTML content for better line-by-line parsing
+  const formattedContent = formatHTML(content);
+  let contentForSearch = formattedContent;
 
   // Filter content based on target type
   if (targetType !== 'all') {
-    contentForSearch = filterContentByTarget(content, targetType, customSelector);
+    contentForSearch = filterContentByTarget(formattedContent, targetType, customSelector);
   }
 
-  // Remove URLs and attributes from search content
+  // Conditionally remove URLs and attributes from search content
+  const excludeUrls = document.getElementById('exclude-urls').checked;
+  if (excludeUrls) {
+    contentForSearch = contentForSearch
+      .replace(/href="[^"]*"/gi, '')
+      .replace(/src="[^"]*"/gi, '')
+      .replace(/srcset="[^"]*"/gi, '')
+      .replace(/data-src="[^"]*"/gi, '')
+      .replace(/action="[^"]*"/gi, '')
+      .replace(/media="[^"]*"/gi, '')
+      .replace(/url\([^)]*\)/gi, '')
+      .replace(/https?:\/\/[^\s<>"']+/gi, '')
+      .replace(/<a[^>]*>[^<]*<\/a>/gi, '')
+      .replace(/data-[^=]*="[^"]*"/gi, '');
+  }
+
+  // Always remove class and id attributes (not URLs)
   contentForSearch = contentForSearch
-    .replace(/href="[^"]*"/gi, '')
-    .replace(/src="[^"]*"/gi, '')
-    .replace(/srcset="[^"]*"/gi, '')
-    .replace(/data-src="[^"]*"/gi, '')
-    .replace(/action="[^"]*"/gi, '')
-    .replace(/media="[^"]*"/gi, '')
-    .replace(/url\([^)]*\)/gi, '')
-    .replace(/https?:\/\/[^\s<>"']+/gi, '')
-    .replace(/<a[^>]*>[^<]*<\/a>/gi, '')
-    .replace(/data-[^=]*="[^"]*"/gi, '')
     .replace(/class="[^"]*"/gi, '')
     .replace(/id="[^"]*"/gi, '');
 
@@ -642,14 +650,24 @@ function searchInContent(content, searchTerm, replaceTerm = '') {
   const regex = createSearchRegex(searchTerm, searchType, caseSensitive);
 
   const matches = [];
+  const lineMatchCounts = {}; // Track how many matches per line
   let match = regex.exec(contentForSearch);
 
   while (match !== null) {
+    const lineNum = contentForSearch.substring(0, match.index).split('\n').length;
+
+    // Track the sequence of this match on its line
+    if (!lineMatchCounts[lineNum]) {
+      lineMatchCounts[lineNum] = 0;
+    }
+    lineMatchCounts[lineNum]++;
+
     matches.push({
       match: match[0],
       index: match.index,
-      line: contentForSearch.substring(0, match.index).split('\n').length,
-      context: getMatchContext(contentForSearch, match.index, 50),
+      line: lineNum,
+      context: getMatchContext(contentForSearch, match.index, 75),
+      sequenceOnLine: lineMatchCounts[lineNum],
     });
     match = regex.exec(contentForSearch);
   }
@@ -658,34 +676,41 @@ function searchInContent(content, searchTerm, replaceTerm = '') {
   if (replaceTerm && matches.length > 0) {
     if (targetType === 'all') {
       // For 'all' content, use the existing simple replacement approach
+      const excludeUrls = document.getElementById('exclude-urls').checked;
       const urlPlaceholders = [];
       let tempContent = content;
 
-      tempContent = tempContent.replace(/href="[^"]*"/gi, (matchedText) => {
-        const placeholder = `__HREF_${urlPlaceholders.length}__`;
-        urlPlaceholders.push(matchedText);
-        return placeholder;
-      });
+      // Only protect URLs if exclude URLs is enabled
+      if (excludeUrls) {
+        tempContent = tempContent.replace(/href="[^"]*"/gi, (matchedText) => {
+          const placeholder = `__HREF_${urlPlaceholders.length}__`;
+          urlPlaceholders.push(matchedText);
+          return placeholder;
+        });
 
-      tempContent = tempContent.replace(/src="[^"]*"/gi, (matchedText) => {
-        const placeholder = `__SRC_${urlPlaceholders.length}__`;
-        urlPlaceholders.push(matchedText);
-        return placeholder;
-      });
+        tempContent = tempContent.replace(/src="[^"]*"/gi, (matchedText) => {
+          const placeholder = `__SRC_${urlPlaceholders.length}__`;
+          urlPlaceholders.push(matchedText);
+          return placeholder;
+        });
 
-      tempContent = tempContent.replace(/https?:\/\/[^\s<>"']+/gi, (matchedText) => {
-        const placeholder = `__URL_${urlPlaceholders.length}__`;
-        urlPlaceholders.push(matchedText);
-        return placeholder;
-      });
+        tempContent = tempContent.replace(/https?:\/\/[^\s<>"']+/gi, (matchedText) => {
+          const placeholder = `__URL_${urlPlaceholders.length}__`;
+          urlPlaceholders.push(matchedText);
+          return placeholder;
+        });
+      }
 
       updatedContent = tempContent.replace(regex, replaceTerm);
 
-      urlPlaceholders.forEach((originalUrl, index) => {
-        updatedContent = updatedContent.replace(`__HREF_${index}__`, originalUrl);
-        updatedContent = updatedContent.replace(`__SRC_${index}__`, originalUrl);
-        updatedContent = updatedContent.replace(`__URL_${index}__`, originalUrl);
-      });
+      // Only restore URLs if they were protected
+      if (excludeUrls) {
+        urlPlaceholders.forEach((originalUrl, index) => {
+          updatedContent = updatedContent.replace(`__HREF_${index}__`, originalUrl);
+          updatedContent = updatedContent.replace(`__SRC_${index}__`, originalUrl);
+          updatedContent = updatedContent.replace(`__URL_${index}__`, originalUrl);
+        });
+      }
     } else {
       // For targeted content, use DOM-based replacement
       updatedContent = replaceInTargetedContent(content, searchTerm, replaceTerm, targetType, customSelector);
@@ -910,8 +935,23 @@ function displayResults(filteredResults = null) {
       // Regular text search highlighting
       let highlightedContext = escapeHtml(match.context);
       if (searchTerm) {
-        const regex = new RegExp(`(${escapeHtml(searchTerm).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-        highlightedContext = highlightedContext.replace(regex, '<span class="highlight-old">$1</span>');
+        // Much simpler approach: find the match position relative to the context start
+        const matchText = match.match;
+        const originalContext = match.context;
+
+        // Find where this specific match should be in the context
+        // Context is created around match.index, so we need to find the relative position
+        const contextStart = Math.max(0, match.index - 75); // Same as getMatchContext
+        const relativeMatchStart = match.index - contextStart;
+
+        // Only highlight if the match is within the context bounds
+        if (relativeMatchStart >= 0 && relativeMatchStart < originalContext.length) {
+          const beforeMatch = escapeHtml(originalContext.substring(0, relativeMatchStart));
+          const highlightedMatch = escapeHtml(matchText);
+          const afterMatch = escapeHtml(originalContext.substring(relativeMatchStart + matchText.length));
+
+          highlightedContext = `${beforeMatch}<span class="highlight-old">${highlightedMatch}</span>${afterMatch}`;
+        }
       }
 
       return `
