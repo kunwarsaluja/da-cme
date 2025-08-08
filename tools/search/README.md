@@ -8,18 +8,36 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 
 ## Features
 
+### **Search & Discovery**
 - **Content Search** - Find text in all content, page metadata, section metadata, or block content
 - **Element Discovery** - Find pages containing specific CSS selectors (leave search term empty)
 - **Advanced Search Types** - Contains, Exact Match, Regular Expression with regex groups ($1, $2)
+- **HTML Mode** - Search and replace entire HTML blocks with normalized formatting
 - **Case Sensitive Search** - Optional case-sensitive matching
+- **Multi-Path Search** - Select multiple directories with tag-based path input
+- **URL Filtering** - Exclude URLs and attributes from search content
+
+### **Content Management**
 - **Bulk Replace** - Select multiple files and replace content
+- **Granular Selection** - Select individual matches within files
+- **Replace with Empty** - Remove content by replacing with empty string (HTML-compliant)
 - **Publishing Workflow** - Preview, publish, or unpublish selected files with progress tracking
+- **Export Results** - Download selected files with match results
+
+### **User Experience**
 - **Smart Filtering** - Filter results by file path or content
-- **Pagination** - Results pagination (configurable page size)
-- **Result Accordion** - Collapse/expand individual result matches
+- **Pagination** - Results pagination (configurable page size: 10 items/page)
+- **Result Accordion** - Collapse/expand individual result matches with global controls
+- **Auto-Collapse** - Configuration panel collapses after scan for better workflow
+- **Dynamic Button Text** - Action buttons show operation type and selected count
+- **Progress Tracking** - Visual feedback during long-running operations
+
+### **Configuration & Filters**
+- **Multi-Path Input** - Tag-based system for selecting multiple search paths
 - **File Filters** - Exclude paths and filter by modification date
-- **Auto-Configuration** - Auto-detects org/site from DA context
-- **Session Memory** - Remembers settings during session
+- **Advanced Filters** - Collapsible section with target content and filtering options
+- **Auto-Configuration** - Manual org/site input with session caching
+- **Include Subfolders** - Optional recursive directory search
 
 ## How to Use
 
@@ -30,9 +48,10 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 
 ### 2. Search
 1. **Search For**: Enter text to find (or leave empty for element discovery)
-2. **Target Content**: Choose All Content, Page Metadata, Block Content, or Custom Selector
-3. **Search Type**: Contains, Exact Match, or Regular Expression
-4. **Options**: Enable case-sensitive search if needed
+2. **Search Type**: Contains, Exact Match, or Regular Expression
+3. **Options**: Enable case-sensitive search or HTML Mode
+4. **Target Content**: Choose All Content, Page Metadata, Block Content, or Custom Selector
+5. **Advanced Filters**: Exclude URLs, set paths to exclude, or filter by modification date
 
 ### 3. Scan & Filter
 1. Click **"Scan Files"** to search your site
@@ -77,6 +96,12 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 - **Replace With**: `$2 $1`
 - **Result**: `Smith, John` → `John Smith`
 
+### HTML Mode: Replace entire HTML blocks
+- **HTML Mode**: Enable checkbox
+- **Search For**: `<div class="hero"><h1>Old Title</h1></div>`
+- **Replace With**: `<div class="banner"><h2>New Title</h2></div>`
+- **Result**: Complete HTML block replacement
+
 ### Filter and bulk publish
 1. Search for content
 2. Filter results: type `/blog` to show only blog pages
@@ -91,11 +116,15 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 
 ## Technical Notes
 
-- **Authentication**: Uses DA SDK for secure access
-- **Publishing**: Integrates with AEM Admin API (admin.hlx.page)
-- **File Types**: Currently supports HTML files only (JSON support planned)
-- **Content Filtering**: Excludes technical attributes (href, src, class, id, data-*, etc.)
+- **Authentication**: Uses DA SDK for secure access to DA Source and List APIs
+- **Publishing**: Integrates with AEM Admin API (admin.hlx.page) for preview/publish/unpublish
+- **File Types**: Supports HTML files (JSON support planned)
+- **HTML Mode**: Raw content processing - no formatting manipulation, preserves exact DA source
+- **Content Filtering**: Optional URL filtering (href, src, srcset, data-*, etc.) with exclude checkbox
+- **Multi-Path Support**: Tag-based input system with autocomplete and path validation
 - **Branch Logic**: Uses 'main' branch for publish/unpublish, current branch for preview
-- **Performance**: File caching, pagination (10 results/page), parallel processing
-- **Configuration**: Auto-detects org/site from DA context, configurable via CONFIG object
-- **Memory**: Session-based caching for org/site and search settings
+- **Performance**: File caching, pagination (10 results/page), parallel processing, lazy loading
+- **Configuration**: Manual org/site input with session caching via CONFIG object
+- **UI Architecture**: Accordion-based layout with auto-collapse, dark/light theme support
+- **Memory**: Session-based caching for org/site, search settings, and file content
+- **Icons**: SVG-based icon system with theme-aware filtering
