@@ -863,36 +863,40 @@ input, textarea, select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   box-shadow: var(--shadow-sm);
   margin-top: var(--spacing-lg);
 }
 
 .primary-actions {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
+  min-width: 0;
 }
 
 .secondary-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
+  min-width: 0;
 }
 
 /* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-md);
   border: none;
   border-radius: var(--border-radius-lg);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition: var(--transition-fast);
   white-space: nowrap;
+  min-width: 0;
+  min-height: 40px;
 }
 
 .btn:disabled {
@@ -966,6 +970,8 @@ input, textarea, select {
   font-size: var(--font-size-sm);
   border-right: 1px solid var(--color-border);
   min-width: 120px;
+  min-height: 40px;
+  box-sizing: border-box;
 }
 
 .operation-select:focus {
@@ -1534,6 +1540,20 @@ input, textarea, select {
     box-shadow: none;
   }
 
+  .action-bar {
+    flex-flow: column wrap;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+
+  .primary-actions,
+  .secondary-actions {
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
   .app-header {
     padding: var(--spacing-lg) var(--spacing-md);
   }
@@ -1560,12 +1580,6 @@ input, textarea, select {
 
   .input-row {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md);
-  }
-
-  .action-bar {
-    flex-direction: column;
-    align-items: stretch;
     gap: var(--spacing-md);
   }
 

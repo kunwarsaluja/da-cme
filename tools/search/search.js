@@ -37,7 +37,7 @@ const API = {
   LIST: 'https://admin.da.live/list',
   SOURCE: 'https://admin.da.live/source',
   VERSION_CREATE: 'https://admin.da.live/versionsource',
-  VERSION_LIST: 'https://admin.da.live/version',
+  VERSION_LIST: 'https://admin.da.live/versionlist',
   PREVIEW: 'https://admin.hlx.page/preview',
   LIVE: 'https://admin.hlx.page/live',
 };
@@ -374,20 +374,89 @@ async function createVersion(path, description = 'Version created by FindReplace
           const result = await response.json();
           return result;
         } catch (jsonError) {
-          console.warn('Version API returned non-JSON response, but status was ok');
           return { success: true, status: response.status };
         }
       } else {
         return { success: true, status: response.status };
       }
     } else {
-      console.error(`Version creation failed with status: ${response.status}`);
       const errorText = await response.text();
-      console.error('Error response:', errorText);
       return null;
     }
   } catch (error) {
-    console.error('Failed to create version:', error);
+    return null;
+  }
+}
+
+async function getVersionList(path) {
+  const { token } = app;
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+  const url = `${API.VERSION_LIST}/${cleanPath}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+
+      // The API might return versions in different formats, let's handle both
+      if (Array.isArray(result)) {
+        return result;
+      } if (result.data && Array.isArray(result.data)) {
+        return result.data;
+      } if (result.versions && Array.isArray(result.versions)) {
+        return result.versions;
+      }
+      return result;
+    }
+    const errorText = await response.text();
+    return null;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function getVersionContent(path, versionId) {
+  const { token } = app;
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+  const url = `${API.VERSION_CREATE}/${cleanPath}/${versionId}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.ok) {
+      const content = await response.text();
+      return content;
+    }
+    const errorText = await response.text();
+    return null;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function getVersionContentByUrl(versionUrl) {
+  const { token } = app;
+  // The versionUrl is a relative path like "/versionsource/kunwarsaluja/..."
+  // We need to make it a full URL
+  const url = `https://admin.da.live${versionUrl}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.ok) {
+      const content = await response.text();
+      return content;
+    }
+    const errorText = await response.text();
+    return null;
+  } catch (error) {
     return null;
   }
 }
@@ -412,6 +481,108 @@ async function saveContent(path, content) {
     return response.ok;
   } catch (error) {
     return false;
+  }
+}
+
+async function revertToPreFindReplaceVersion(filePath) {
+  try {
+    // Get all versions for this file
+    const versions = await getVersionList(filePath);
+
+    if (!versions || !Array.isArray(versions)) {
+      return false;
+    }
+
+    versions.forEach((version, index) => {
+      const versionId = version.url ? version.url.split('/').pop() : 'auto-save';
+      const label = version.label || 'auto-save';
+      const timestamp = new Date(version.timestamp).toLocaleString();
+    });
+
+    // Sort versions by timestamp (most recent first) and get the latest one with a URL
+    const namedVersions = versions
+      .filter((version) => version.url && version.label && version.timestamp)
+      .sort((a, b) => b.timestamp - a.timestamp);
+
+    if (namedVersions.length === 0) {
+      return false;
+    }
+
+    // Get the most recent version (first in sorted array)
+    const latestVersion = namedVersions[0];
+    const versionUrl = latestVersion.url;
+    const versionLabel = latestVersion.label;
+    const versionDate = new Date(latestVersion.timestamp).toLocaleString();
+
+    // Get content from that version using the full versionsource URL
+    const previousContent = await getVersionContentByUrl(versionUrl);
+
+    if (!previousContent) {
+      return false;
+    }
+
+    // Create safety backup before reverting
+    await createVersion(filePath, `Revert(${versionLabel})`);
+
+    // Restore the previous content
+    const success = await saveContent(filePath, previousContent);
+
+    return success;
+  } catch (error) {
+    return false;
+  }
+}
+
+async function bulkRevertLastReplacement() {
+  // Get selected files from results, not from selectedFiles set
+  const selectedResults = app.results.filter((result) => result.selected);
+  if (selectedResults.length === 0) {
+    showMessage('No files selected for revert', 'error');
+    return;
+  }
+
+  const confirmation = confirm(
+    `Revert ${selectedResults.length} selected files to their versions before FindReplace Pro modifications?\n\n`
+    + 'This will restore each file to its last version before any FindReplace Pro changes were made.',
+  );
+
+  if (!confirmation) return;
+
+  try {
+    updateProgress(0, 'Finding pre-replacement versions...');
+
+    const revertPromises = selectedResults.map(async (result, index) => {
+      const filePath = result.file.path;
+      const fileName = filePath.split('/').pop();
+      updateProgress(((index + 1) / selectedResults.length) * 100, `Reverting ${fileName}...`);
+
+      const success = await revertToPreFindReplaceVersion(filePath);
+      return { success, path: filePath };
+    });
+
+    const results = await Promise.all(revertPromises);
+    const successCount = results.filter((r) => r.success).length;
+    const failedFiles = results.filter((r) => !r.success).map((r) => r.path);
+
+    // Clear entire cache after revert operations to ensure fresh content on next search
+    app.fileCache.clear();
+
+    updateProgress(100, 'Revert complete!');
+
+    if (failedFiles.length > 0) {
+      showMessage(
+        `Reverted ${successCount}/${selectedResults.length} files. Failed: ${failedFiles.map((f) => f.split('/').pop()).join(', ')}`,
+        'warning',
+      );
+    } else {
+      showMessage(
+        `Successfully reverted ${successCount} files to most recent versions`,
+        'success',
+      );
+    }
+  } catch (error) {
+    showMessage(`Bulk revert failed: ${error.message}`, 'error');
+    updateProgress(0, '');
   }
 }
 
@@ -648,7 +819,6 @@ function searchForElements(content, selector) {
       foundElements: true,
     };
   } catch (error) {
-    console.error('Error searching for elements:', error);
     return { matches: [], updatedContent: content };
   }
 }
@@ -940,9 +1110,11 @@ async function scanFiles() {
 
     const executeBtn = document.getElementById('execute-btn');
     const exportBtn = document.getElementById('export-btn');
+    const revertBtn = document.getElementById('revert-btn');
     const bulkPublishBtn = document.getElementById('bulk-publish-btn');
     if (executeBtn) executeBtn.disabled = app.results.length === 0;
     if (exportBtn) exportBtn.disabled = app.results.length === 0;
+    if (revertBtn) revertBtn.disabled = app.results.length === 0;
     if (bulkPublishBtn) bulkPublishBtn.disabled = app.results.length === 0;
 
     const targetType = document.getElementById('target-type')?.value || 'all';
@@ -1964,6 +2136,21 @@ function updateExportButtonText() {
   }
 }
 
+function updateRevertButtonText() {
+  const buttonText = document.getElementById('revert-btn-text');
+
+  if (buttonText) {
+    // Count selected files
+    const selectedCount = app.results.filter((result) => result.selected).length;
+
+    if (selectedCount > 0) {
+      buttonText.textContent = `Revert Selected (${selectedCount})`;
+    } else {
+      buttonText.textContent = 'Revert Selected';
+    }
+  }
+}
+
 function toggleAccordion(contentId) {
   const content = document.getElementById(contentId);
   const card = content.closest('.accordion-card');
@@ -1994,6 +2181,7 @@ function setupEventListeners() {
   const scanBtn = document.getElementById('scan-btn');
   const executeBtn = document.getElementById('execute-btn');
   const exportBtn = document.getElementById('export-btn');
+  const revertBtn = document.getElementById('revert-btn');
   const bulkPublishBtn = document.getElementById('bulk-publish-btn');
   const toggleAll = document.getElementById('toggle-all');
   const clearSelection = document.getElementById('clear-selection');
@@ -2003,6 +2191,7 @@ function setupEventListeners() {
   if (scanBtn) scanBtn.addEventListener('click', scanFiles);
   if (executeBtn) executeBtn.addEventListener('click', executeReplace);
   if (exportBtn) exportBtn.addEventListener('click', exportResults);
+  if (revertBtn) revertBtn.addEventListener('click', bulkRevertLastReplacement);
   if (bulkPublishBtn) bulkPublishBtn.addEventListener('click', bulkOperation);
 
   // Update button text when dropdown changes
