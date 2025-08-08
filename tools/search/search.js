@@ -987,13 +987,21 @@ function displayResults(filteredResults = null) {
     const searchTerm = document.getElementById('search-term')?.value || '';
 
     const matchesHtml = result.matches.map((match, matchIndex) => {
+      // Initialize match selection if not exists
+      if (!match.selected) {
+        match.selected = true; // Default all matches to selected
+      }
+
       // Handle element-only searches differently
       if (result.foundElements && !searchTerm) {
         return `
-          <div class="result-preview element-preview">
-            <strong>${escapeHtml(match.match)}</strong>
-            <br><small style="color: #666;">Content: ${escapeHtml(match.context)}</small>
-            ${match.elementHTML ? `<br><small style="color: #888; font-family: monospace;">${escapeHtml(match.elementHTML)}</small>` : ''}
+          <div class="match-item">
+            <input type="checkbox" class="match-checkbox" data-file-index="${originalIndex}" data-match-index="${matchIndex}" ${match.selected ? 'checked' : ''}>
+            <div class="result-preview element-preview">
+              <strong>${escapeHtml(match.match)}</strong>
+              <br><small style="color: #666;">Content: ${escapeHtml(match.context)}</small>
+              ${match.elementHTML ? `<br><small style="color: #888; font-family: monospace;">${escapeHtml(match.elementHTML)}</small>` : ''}
+            </div>
           </div>
         `;
       }
@@ -1021,9 +1029,12 @@ function displayResults(filteredResults = null) {
       }
 
       return `
-        <div class="result-preview">
-          Line ${match.line}: ...${highlightedContext}...
-          ${replaceTerm ? `<br><small style="color: #007aff;">Replace with: <span class="highlight-new">${escapeHtml(replaceTerm)}</span></small>` : ''}
+        <div class="match-item">
+          <input type="checkbox" class="match-checkbox" data-file-index="${originalIndex}" data-match-index="${matchIndex}" ${match.selected ? 'checked' : ''}>
+          <div class="result-preview">
+            Line ${match.line}: ...${highlightedContext}...
+            ${replaceTerm ? `<br><small style="color: #007aff;">Replace with: <span class="highlight-new">${escapeHtml(replaceTerm)}</span></small>` : ''}
+          </div>
         </div>
       `;
     }).join('');
@@ -1066,6 +1077,17 @@ function displayResults(filteredResults = null) {
       const idx = parseInt(e.target.dataset.index, 10);
       app.results[idx].selected = e.target.checked;
 
+      // Also update all individual match checkboxes in this file
+      const matchCheckboxes = item.querySelectorAll('.match-checkbox');
+      matchCheckboxes.forEach((matchCheckbox) => {
+        matchCheckbox.checked = e.target.checked;
+        const matchIndex = parseInt(matchCheckbox.dataset.matchIndex, 10);
+        app.results[idx].matches[matchIndex].selected = e.target.checked;
+      });
+
+      // Clear indeterminate state
+      e.target.indeterminate = false;
+
       if (e.target.checked) {
         app.selectedFiles.add(idx);
       } else {
@@ -1075,11 +1097,49 @@ function displayResults(filteredResults = null) {
       updateActionButtons();
     });
 
+    // Add event listeners for individual match checkboxes
+    const matchCheckboxes = item.querySelectorAll('.match-checkbox');
+    matchCheckboxes.forEach((matchCheckbox) => {
+      matchCheckbox.addEventListener('change', (e) => {
+        const fileIndex = parseInt(e.target.dataset.fileIndex, 10);
+        const matchIndex = parseInt(e.target.dataset.matchIndex, 10);
+
+        // Update the match selection state
+        app.results[fileIndex].matches[matchIndex].selected = e.target.checked;
+
+        // Check if all matches in this file are selected/unselected
+        const allMatches = app.results[fileIndex].matches;
+        const selectedMatches = allMatches.filter((match) => match.selected);
+
+        // Update file-level checkbox based on match selection
+        const fileCheckbox = item.querySelector('.result-checkbox');
+        if (selectedMatches.length === 0) {
+          // No matches selected - uncheck file checkbox
+          fileCheckbox.checked = false;
+          app.results[fileIndex].selected = false;
+          app.selectedFiles.delete(fileIndex);
+        } else if (selectedMatches.length === allMatches.length) {
+          // All matches selected - check file checkbox
+          fileCheckbox.checked = true;
+          app.results[fileIndex].selected = true;
+          app.selectedFiles.add(fileIndex);
+        } else {
+          // Some matches selected - check file checkbox but mark as partial
+          fileCheckbox.checked = true;
+          app.results[fileIndex].selected = true;
+          app.selectedFiles.add(fileIndex);
+          fileCheckbox.indeterminate = true;
+        }
+
+        updateActionButtons();
+      });
+    });
+
     // Add accordion toggle functionality
     const resultContent = item.querySelector('.result-content');
     resultContent.addEventListener('click', (e) => {
       // Don't trigger if clicking on checkbox or link
-      if (e.target.closest('.result-checkbox') || e.target.closest('a')) return;
+      if (e.target.closest('.result-checkbox') || e.target.closest('.match-checkbox') || e.target.closest('a')) return;
 
       const resultHeader = item.querySelector('.result-header');
       const idx = parseInt(resultHeader.dataset.resultIndex, 10);
@@ -1238,6 +1298,77 @@ function resetPagination() {
   app.pagination.filteredResults = null;
 }
 
+// Function to replace only selected matches in content
+function replaceSelectedMatches(content, matches, searchTerm, replaceTerm) {
+  // Get only selected matches, sorted by index in reverse order
+  // (to avoid index shifting when replacing from beginning)
+  const selectedMatches = matches
+    .filter((match) => match.selected)
+    .sort((a, b) => b.index - a.index);
+
+  if (selectedMatches.length === 0) {
+    return content; // No matches selected, return original content
+  }
+
+  const searchType = document.getElementById('search-type')?.value || 'contains';
+  const caseSensitive = document.getElementById('case-sensitive')?.checked || false;
+
+  // Build unique identifiers for each selected match using text + line + sequence
+  const selectedMatchIdentifiers = new Set();
+  selectedMatches.forEach((match) => {
+    const identifier = `${match.match}|${match.line}|${match.sequenceOnLine || 1}`;
+    selectedMatchIdentifiers.add(identifier);
+  });
+
+  // Create the replacement regex
+  const regex = createSearchRegex(searchTerm, searchType, caseSensitive);
+
+  // We need to track which specific occurrences to replace based on their position and sequence
+  // So we'll recreate the search exactly as it was done originally
+  const formattedContent = formatHTML(content);
+
+  let replacementCount = 0;
+  const lineMatchCounts = {};
+
+  // Use replace function with a callback to selectively replace only chosen matches
+  const updatedFormattedContent = formattedContent.replace(regex, (matchText, ...args) => {
+    // Get the offset (last argument in replace callback)
+    const offset = args[args.length - 2];
+    const lineNum = formattedContent.substring(0, offset).split('\n').length;
+
+    // Track the sequence of this match on its line
+    if (!lineMatchCounts[lineNum]) {
+      lineMatchCounts[lineNum] = 0;
+    }
+    lineMatchCounts[lineNum]++;
+
+    const identifier = `${matchText}|${lineNum}|${lineMatchCounts[lineNum]}`;
+
+    // Only replace if this match was selected
+    if (selectedMatchIdentifiers.has(identifier)) {
+      replacementCount++;
+
+      let finalReplaceTerm = replaceTerm;
+
+      if (searchType === 'regex' && replaceTerm.includes('$')) {
+        // Handle regex capture groups
+        const flags = caseSensitive ? '' : 'i';
+        const regexForReplacement = new RegExp(searchTerm, flags);
+        finalReplaceTerm = matchText.replace(regexForReplacement, replaceTerm);
+      }
+
+      return finalReplaceTerm;
+    }
+    // Don't replace this match, return original
+    return matchText;
+  });
+
+  // Now we need to map the changes back to the original content format
+  // For now, return the formatted content with replacements
+  // This maintains the same approach as the original searchInContent
+  return updatedFormattedContent;
+}
+
 async function executeReplace() {
   const selected = app.results.filter((r) => r.selected);
 
@@ -1266,9 +1397,17 @@ async function executeReplace() {
     return;
   }
 
+  // Count total selected matches across all files
+  const totalSelectedMatches = selected.reduce((total, result) => total + result.matches.filter((match) => match.selected).length, 0);
+
+  if (totalSelectedMatches === 0) {
+    showMessage('No matches selected for replacement', 'error');
+    return;
+  }
+
   const replaceText = replaceEmptyChecked ? '(remove text)' : `"${replaceTerm}"`;
   // eslint-disable-next-line no-alert
-  if (!confirm(`Replace "${searchTerm}" with ${replaceText} in ${selected.length} files? This cannot be undone.`)) {
+  if (!confirm(`Replace ${totalSelectedMatches} selected matches with ${replaceText} in ${selected.length} files? This cannot be undone.`)) {
     return;
   }
 
@@ -1278,8 +1417,8 @@ async function executeReplace() {
     const replacePromises = selected.map(async (result, index) => {
       updateProgress((index / selected.length) * 100, `Updating ${result.file.path.split('/').pop()}...`);
 
-      const replaceResult = searchInContent(result.originalContent, searchTerm, replaceTerm);
-      const { updatedContent } = replaceResult;
+      // Use granular replacement function for selected matches only
+      const updatedContent = replaceSelectedMatches(result.originalContent, result.matches, searchTerm, replaceTerm);
       const success = await saveContent(result.file.path, updatedContent);
       return success;
     });
