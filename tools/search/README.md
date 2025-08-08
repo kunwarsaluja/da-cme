@@ -21,6 +21,7 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 - **Bulk Replace** - Select multiple files and replace content
 - **Granular Selection** - Select individual matches within files
 - **Replace with Empty** - Remove content by replacing with empty string (HTML-compliant)
+- **Automatic Versioning** - Creates backup versions before any destructive operations (required for replacement)
 - **Publishing Workflow** - Preview, publish, or unpublish selected files with progress tracking
 - **Export Results** - Download selected files with match results
 
@@ -118,6 +119,7 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 
 - **Authentication**: Uses DA SDK for secure access to DA Source and List APIs
 - **Publishing**: Integrates with AEM Admin API (admin.hlx.page) for preview/publish/unpublish
+- **Versioning**: Automatic backup creation via DA Version Source API (`/versionsource/`) before destructive operations
 - **File Types**: Supports HTML files (JSON support planned)
 - **HTML Mode**: Raw content processing - no formatting manipulation, preserves exact DA source
 - **Content Filtering**: Optional URL filtering (href, src, srcset, data-*, etc.) with exclude checkbox
@@ -127,4 +129,5 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 - **Configuration**: Manual org/site input with session caching via CONFIG object
 - **UI Architecture**: Accordion-based layout with auto-collapse, dark/light theme support
 - **Memory**: Session-based caching for org/site, search settings, and file content
+- **Safety Features**: Pre-replacement version creation (required), granular match selection, user confirmations, fail-safe skipping
 - **Icons**: SVG-based icon system with theme-aware filtering

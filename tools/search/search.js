@@ -36,6 +36,8 @@ let isSelectingFromAutocomplete = false;
 const API = {
   LIST: 'https://admin.da.live/list',
   SOURCE: 'https://admin.da.live/source',
+  VERSION_CREATE: 'https://admin.da.live/versionsource',
+  VERSION_LIST: 'https://admin.da.live/version',
   PREVIEW: 'https://admin.hlx.page/preview',
   LIVE: 'https://admin.hlx.page/live',
 };
@@ -344,6 +346,48 @@ async function fetchContent(path) {
     }
     return null;
   } catch (error) {
+    return null;
+  }
+}
+
+async function createVersion(path, description = 'Version created by FindReplace Pro') {
+  const { token } = app;
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+  const url = `${API.VERSION_CREATE}/${cleanPath}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        label: description,
+      }),
+    });
+
+    if (response.ok) {
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          const result = await response.json();
+          return result;
+        } catch (jsonError) {
+          console.warn('Version API returned non-JSON response, but status was ok');
+          return { success: true, status: response.status };
+        }
+      } else {
+        return { success: true, status: response.status };
+      }
+    } else {
+      console.error(`Version creation failed with status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      return null;
+    }
+  } catch (error) {
+    console.error('Failed to create version:', error);
     return null;
   }
 }
@@ -1407,30 +1451,56 @@ async function executeReplace() {
 
   const replaceText = replaceEmptyChecked ? '(remove text)' : `"${replaceTerm}"`;
   // eslint-disable-next-line no-alert
-  if (!confirm(`Replace ${totalSelectedMatches} selected matches with ${replaceText} in ${selected.length} files? This cannot be undone.`)) {
+  if (!confirm(`Replace ${totalSelectedMatches} selected matches with ${replaceText} in ${selected.length} files?\n\nSAFETY: Backup versions will be created first. Files will only be modified if backup creation succeeds.`)) {
     return;
   }
 
   try {
     let successCount = 0;
+    let versionCount = 0;
 
     const replacePromises = selected.map(async (result, index) => {
-      updateProgress((index / selected.length) * 100, `Updating ${result.file.path.split('/').pop()}...`);
+      const fileName = result.file.path.split('/').pop();
+
+      // Step 1: Create version before making changes (REQUIRED)
+      updateProgress((index / selected.length) * 50, `Creating backup version for ${fileName}...`);
+
+      const versionResult = await createVersion(result.file.path);
+
+      if (!versionResult) {
+        // Version creation failed - skip replacement for safety
+        updateProgress(((index + 1) / selected.length) * 100, `Skipped ${fileName} - version creation failed`);
+        return { success: false, versionCreated: false, skipped: true };
+      }
+
+      versionCount++;
+
+      // Step 2: Perform the replacement (only if version was created successfully)
+      updateProgress(((index + 0.5) / selected.length) * 100, `Updating ${fileName}...`);
 
       // Use granular replacement function for selected matches only
       const updatedContent = replaceSelectedMatches(result.originalContent, result.matches, searchTerm, replaceTerm);
       const success = await saveContent(result.file.path, updatedContent);
-      return success;
+      return { success, versionCreated: true, skipped: false };
     });
 
     const results = await Promise.all(replacePromises);
-    successCount = results.filter(Boolean).length;
+    successCount = results.filter((r) => r.success).length;
+    versionCount = results.filter((r) => r.versionCreated).length;
+    const skippedCount = results.filter((r) => r.skipped).length;
 
     // Clear entire cache after replace operations to ensure fresh content on next search
     app.fileCache.clear();
 
     updateProgress(100, 'Complete!');
-    showMessage(`Updated ${successCount}/${selected.length} files successfully!`, 'success');
+
+    if (skippedCount > 0) {
+      showMessage(`Updated ${successCount}/${selected.length} files. Skipped ${skippedCount} files due to version creation failures. Created ${versionCount} backup versions.`, 'warning');
+    } else if (versionCount === selected.length) {
+      showMessage(`Updated ${successCount}/${selected.length} files successfully! Created ${versionCount} backup versions.`, 'success');
+    } else {
+      showMessage(`Updated ${successCount}/${selected.length} files. Warning: Some backup versions could not be created.`, 'warning');
+    }
   } catch (error) {
     showMessage(`Error: ${error.message}`, 'error');
     updateProgress(0, '');
