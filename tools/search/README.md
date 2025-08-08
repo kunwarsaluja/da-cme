@@ -22,6 +22,7 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 - **Granular Selection** - Select individual matches within files
 - **Replace with Empty** - Remove content by replacing with empty string (HTML-compliant)
 - **Automatic Versioning** - Creates backup versions before any destructive operations (required for replacement)
+- **Version Revert** - Revert selected files to their most recent saved versions
 - **Publishing Workflow** - Preview, publish, or unpublish selected files with progress tracking
 - **Export Results** - Download selected files with match results
 
@@ -72,6 +73,12 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 3. Click operation button (shows count: "Publish Selected (3)")
 4. Monitor progress and results
 
+**For reverting changes:**
+1. Select files to revert
+2. Click **"Revert Selected"** (shows count: "Revert Selected (2)")
+3. Confirm restoration to most recent saved versions
+4. Monitor progress - automatic backup created before revert
+
 ## Examples
 
 ### Find all pages with hero blocks
@@ -120,6 +127,7 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 - **Authentication**: Uses DA SDK for secure access to DA Source and List APIs
 - **Publishing**: Integrates with AEM Admin API (admin.hlx.page) for preview/publish/unpublish
 - **Versioning**: Automatic backup creation via DA Version Source API (`/versionsource/`) before destructive operations
+- **Version Restore**: Uses DA Version List API (`/versionlist/`) to find most recent versions and restore content
 - **File Types**: Supports HTML files (JSON support planned)
 - **HTML Mode**: Raw content processing - no formatting manipulation, preserves exact DA source
 - **Content Filtering**: Optional URL filtering (href, src, srcset, data-*, etc.) with exclude checkbox
@@ -129,5 +137,5 @@ FindReplace Pro helps you search for content across your site, replace it in bul
 - **Configuration**: Manual org/site input with session caching via CONFIG object
 - **UI Architecture**: Accordion-based layout with auto-collapse, dark/light theme support
 - **Memory**: Session-based caching for org/site, search settings, and file content
-- **Safety Features**: Pre-replacement version creation (required), granular match selection, user confirmations, fail-safe skipping
+- **Safety Features**: Pre-replacement version creation (required), granular match selection, user confirmations, fail-safe skipping, version restore with automatic backup
 - **Icons**: SVG-based icon system with theme-aware filtering

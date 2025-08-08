@@ -542,8 +542,8 @@ async function bulkRevertLastReplacement() {
   }
 
   const confirmation = confirm(
-    `Revert ${selectedResults.length} selected files to their versions before FindReplace Pro modifications?\n\n`
-    + 'This will restore each file to its last version before any FindReplace Pro changes were made.',
+    `Revert ${selectedResults.length} selected files to their most recent saved versions?\n\n`
+    + 'This will restore each file to its latest saved version.',
   );
 
   if (!confirmation) return;
