@@ -28,7 +28,7 @@
   </script>
   <script type="module">
     import { sampleRUM } from '/aemedge/scripts/aem.js';
-    import { applyRedirects } from '/scripts/redirects.js';
+    import { applyRedirects } from '/aemedge/scripts/redirects.js';
     await applyRedirects();
     sampleRUM('404', { source: document.referrer });
   </script>
