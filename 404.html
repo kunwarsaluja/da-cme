@@ -28,6 +28,8 @@
   </script>
   <script type="module">
     import { sampleRUM } from '/aemedge/scripts/aem.js';
+    import { applyRedirects } from '/scripts/redirects.js';
+    await applyRedirects();
     sampleRUM('404', { source: document.referrer });
   </script>
   <link rel="stylesheet" href="/aemedge/styles/styles.css">
