@@ -22,10 +22,14 @@ export function activateRedirects(data) {
           return result;
         };
       } else if (k.toLowerCase() === 'start') {
-        acc.start = new Date(
-          Date.UTC(1899, 11, 30, 0, 0, 0)
-          + (v - Math.floor(v)) * 86400000 + Math.floor(v) * 86400000,
-        );
+        if (typeof v === 'string') {
+          acc.start = new Date(v);
+        } else {
+          acc.start = new Date(
+            Date.UTC(1899, 11, 30, 0, 0, 0)
+            + (v - Math.floor(v)) * 86400000 + Math.floor(v) * 86400000,
+          );
+        }
       }
       return acc;
     }, {}));
